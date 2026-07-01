@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Trang thông tin Đội 3 – VAECO</title>
+    <link rel="icon" type="image/x-icon" href="/static/images/favicon.png">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --navy:    #0a1628;
+            --navy2:   #0f1f3d;
+            --blue:    #1a4fa8;
+            --blue2:   #0e3a8a;
+            --accent:  #3b82f6;
+            --gold:    #f59e0b;
+            --text:    #e2e8f0;
+            --muted:   #94a3b8;
+            --sidebar-w: 90px;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--navy);
+            color: var(--text);
+        }
+
+        /* ── Background ── */
+        .bg-layer {
+            position: fixed; inset: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 70% 50%, rgba(26,79,168,0.18) 0%, transparent 70%),
+                linear-gradient(160deg, #0a1628 0%, #0d1e3a 50%, #081422 100%);
+            z-index: 0;
+        }
+        .bg-pattern {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background-image:
+                repeating-linear-gradient(0deg,   transparent, transparent 39px, rgba(255,255,255,0.018) 39px, rgba(255,255,255,0.018) 40px),
+                repeating-linear-gradient(90deg,  transparent, transparent 39px, rgba(255,255,255,0.018) 39px, rgba(255,255,255,0.018) 40px);
+        }
+
+        /* ── Big decorative background text ── */
+        .bg-text {
+            position: fixed;
+            right: -20px; bottom: -30px;
+            font-size: clamp(120px, 22vw, 280px);
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            line-height: 1;
+            color: rgba(26,79,168,0.08);
+            pointer-events: none;
+            user-select: none;
+            z-index: 0;
+        }
+
+        /* ── Top bar ── */
+        .topbar {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: 60px;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 24px;
+            background: rgba(10,22,40,0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            z-index: 100;
+        }
+        .topbar-logo { display: flex; align-items: center; gap: 12px; }
+        .topbar-logo img { height: 36px; object-fit: contain; }
+        .topbar-logo-divider {
+            width: 1px; height: 26px;
+            background: rgba(255,255,255,0.15);
+        }
+        .topbar-squad {
+            font-size: 0.78rem; font-weight: 700;
+            letter-spacing: 0.12em; text-transform: uppercase;
+            color: var(--accent); opacity: 0.9;
+        }
+        .topbar-center {
+            font-size: 0.82rem; font-weight: 600;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            color: rgba(255,255,255,0.55);
+            position: absolute; left: 50%; transform: translateX(-50%);
+        }
+        .topbar-right { display: flex; align-items: center; gap: 12px; }
+        .topbar-contact {
+            font-size: 0.75rem; color: var(--muted);
+            letter-spacing: 0.04em;
+        }
+        .topbar-badge {
+            padding: 5px 14px;
+            background: var(--blue); color: #fff;
+            border-radius: 20px; font-size: 0.72rem; font-weight: 700;
+            letter-spacing: 0.06em; text-transform: uppercase;
+        }
+
+        /* ── Left sidebar (section selector) ── */
+        .section-sidebar {
+            position: fixed;
+            left: 20px;
+            top: 50%; transform: translateY(-50%);
+            display: flex; flex-direction: column;
+            align-items: center; gap: 6px;
+            z-index: 50;
+        }
+        .scroll-btn {
+            width: 36px; height: 36px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.8rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .scroll-btn:hover {
+            background: rgba(59,130,246,0.25);
+            color: #fff;
+            border-color: rgba(59,130,246,0.4);
+        }
+        .thumbs-track {
+            display: flex; flex-direction: column;
+            gap: 10px;
+            padding: 10px 0;
+        }
+        .thumb {
+            width: 54px; height: 54px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.12);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.25s;
+            background: rgba(255,255,255,0.05);
+            flex-shrink: 0;
+        }
+        .thumb:hover {
+            border-color: rgba(59,130,246,0.6);
+            transform: scale(1.08);
+        }
+        .thumb.active {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.25), 0 0 20px rgba(59,130,246,0.3);
+            transform: scale(1.15);
+        }
+        .thumb img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.3s;
+        }
+        .thumb:hover img { transform: scale(1.08); }
+        .thumb .thumb-fallback {
+            width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem;
+            background: linear-gradient(135deg, var(--blue2), var(--blue));
+        }
+
+        /* ── Main content ── */
+        .main-stage {
+            position: fixed;
+            left: calc(var(--sidebar-w) + 20px);
+            right: 0; top: 60px; bottom: 0;
+            display: flex; align-items: center;
+            padding: 0 60px 0 40px;
+            z-index: 10;
+        }
+
+        .section-panel {
+            position: absolute; inset: 0;
+            display: flex; align-items: center;
+            padding: 0 60px 0 40px;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(18px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .section-panel.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        .panel-content { max-width: 560px; }
+
+        .panel-tag {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 4px 14px;
+            background: rgba(59,130,246,0.15);
+            border: 1px solid rgba(59,130,246,0.35);
+            border-radius: 20px;
+            font-size: 0.7rem; font-weight: 700;
+            letter-spacing: 0.12em; text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+        .panel-tag-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: var(--accent);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50%       { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        .panel-title {
+            font-size: clamp(2rem, 5vw, 3.6rem);
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            line-height: 1.05;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+        .panel-title span { color: var(--accent); }
+
+        .panel-subtitle {
+            font-size: 0.85rem; font-weight: 600;
+            letter-spacing: 0.06em; text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 18px;
+        }
+
+        .panel-divider {
+            width: 60px; height: 3px;
+            background: linear-gradient(90deg, var(--accent), transparent);
+            border-radius: 2px;
+            margin-bottom: 18px;
+        }
+
+        .panel-desc {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: rgba(226,232,240,0.75);
+            margin-bottom: 28px;
+            max-width: 440px;
+        }
+
+        .panel-cta {
+            display: inline-flex; align-items: center; gap: 10px;
+            padding: 12px 28px;
+            background: var(--blue);
+            color: #fff;
+            font-size: 0.85rem; font-weight: 700;
+            letter-spacing: 0.06em; text-transform: uppercase;
+            text-decoration: none;
+            border-radius: 30px;
+            transition: all 0.25s;
+            border: 1px solid transparent;
+        }
+        .panel-cta:hover {
+            background: var(--accent);
+            box-shadow: 0 4px 20px rgba(59,130,246,0.4);
+            transform: translateY(-2px);
+        }
+        .panel-cta-arrow { font-size: 1rem; transition: transform 0.2s; }
+        .panel-cta:hover .panel-cta-arrow { transform: translateX(4px); }
+
+        /* Section number */
+        .panel-number {
+            position: absolute;
+            right: 60px; bottom: 50px;
+            font-size: clamp(80px, 12vw, 160px);
+            font-weight: 900;
+            color: rgba(255,255,255,0.04);
+            line-height: 1;
+            user-select: none; pointer-events: none;
+            letter-spacing: -0.06em;
+        }
+
+        /* ── Section indicator dots ── */
+        .section-dots {
+            position: fixed;
+            bottom: 28px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 8px; z-index: 50;
+        }
+        .dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+        .dot.active {
+            background: var(--accent);
+            width: 24px; border-radius: 4px;
+        }
+
+        /* ── Contact footer strip ── */
+        .contact-strip {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            height: 22px;
+            display: flex; align-items: center; justify-content: center;
+            gap: 24px;
+            background: rgba(0,0,0,0.4);
+            font-size: 0.65rem;
+            color: rgba(255,255,255,0.3);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            z-index: 40;
+        }
+        .contact-strip a { color: rgba(255,255,255,0.3); text-decoration: none; }
+
+        /* ── Loading spinner ── */
+        .thumb-loading {
+            width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(255,255,255,0.04);
+        }
+        .spinner {
+            width: 16px; height: 16px;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── Mobile ── */
+        @media (max-width: 640px) {
+            :root { --sidebar-w: 70px; }
+            .section-sidebar { left: 10px; }
+            .thumb { width: 44px; height: 44px; }
+            .main-stage { left: calc(var(--sidebar-w) + 10px); padding: 0 20px 0 16px; }
+            .section-panel { padding: 0 20px 0 16px; }
+            .topbar-center { display: none; }
+            .panel-number { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Background layers -->
+<div class="bg-layer"></div>
+<div class="bg-pattern"></div>
+<div class="bg-text">A320</div>
+
+<!-- Top bar -->
+<header class="topbar">
+    <div class="topbar-logo">
+        <a href="http://vaeco.com.vn/web/vi/" target="_blank">
+            <img src="/static/images/vaeco-logo.png" alt="VAECO">
+        </a>
+        <div class="topbar-logo-divider"></div>
+        <span class="topbar-squad">Đội 3</span>
+    </div>
+
+    <div class="topbar-center">TTBD Nội trường Hồ Chí Minh</div>
+
+    <div class="topbar-right">
+        <span class="topbar-contact">Airbus A320 / A321</span>
+        <span class="topbar-badge">VAECO</span>
+    </div>
+</header>
+
+<!-- Left section selector sidebar -->
+<aside class="section-sidebar" id="sidebar">
+    <button class="scroll-btn" id="btnUp" title="Lên">▲</button>
+    <div class="thumbs-track" id="thumbsTrack">
+        <!-- thumbnails injected by JS -->
+    </div>
+    <button class="scroll-btn" id="btnDown" title="Xuống">▼</button>
+</aside>
+
+<!-- Main content panels -->
+<main class="main-stage">
+
+    <!-- Panel 0: Album đội  ← DEFAULT FIRST -->
+    <div class="section-panel active" data-idx="0">
+        <div class="panel-content">
+            <div class="panel-tag"><span class="panel-tag-dot"></span>Album đội</div>
+            <h1 class="panel-title">ALBUM<br><span>ĐỘI 3</span></h1>
+            <p class="panel-subtitle">Ký ức & khoảnh khắc của đội</p>
+            <div class="panel-divider"></div>
+            <p class="panel-desc">
+                Album ảnh lưu giữ những khoảnh khắc đáng nhớ của Đội 3 — TTBD Nội trường Hồ Chí Minh.
+                Tạo album mới và chia sẻ ảnh/video với cả đội sau khi đăng nhập.
+            </p>
+            <a href="/memories" class="panel-cta">Truy cập <span class="panel-cta-arrow">→</span></a>
+        </div>
+        <div class="panel-number">01</div>
+    </div>
+
+    <!-- Panel 1: Hot Spots -->
+    <div class="section-panel" data-idx="1">
+        <div class="panel-content">
+            <div class="panel-tag"><span class="panel-tag-dot"></span>Hot Spots</div>
+            <h1 class="panel-title">HOT<br><span>SPOTS</span></h1>
+            <p class="panel-subtitle">Các điểm chú ý kiểm tra A320/321</p>
+            <div class="panel-divider"></div>
+            <p class="panel-desc">
+                Danh sách các điểm cần kiểm tra sớm trên tàu Airbus A320/321, được cập nhật từ Google Sheets.
+                Mỗi mục kèm theo ảnh minh họa tình trạng đúng (ĐÚNG) và tình trạng lỗi (SAI).
+            </p>
+            <a href="/hotspot" class="panel-cta">Truy cập <span class="panel-cta-arrow">→</span></a>
+        </div>
+        <div class="panel-number">02</div>
+    </div>
+
+    <!-- Panel 2: Tools -->
+    <div class="section-panel" data-idx="2">
+        <div class="panel-content">
+            <div class="panel-tag"><span class="panel-tag-dot"></span>Danh mục Tool</div>
+            <h1 class="panel-title">DANH MỤC<br><span>TOOL</span></h1>
+            <p class="panel-subtitle">Tool lẻ & thay động cơ A320/321</p>
+            <div class="panel-divider"></div>
+            <p class="panel-desc">
+                Danh sách tool chuyên dụng cho công tác bảo dưỡng Airbus A320/321, được đồng bộ từ Google Sheets.
+                Tra cứu theo công việc: Task, Part Number, tên Tool và số lượng cần dùng.
+            </p>
+            <a href="/tools" class="panel-cta">Truy cập <span class="panel-cta-arrow">→</span></a>
+        </div>
+        <div class="panel-number">03</div>
+    </div>
+
+    <!-- Panel 3: Quy định -->
+    <div class="section-panel" data-idx="3">
+        <div class="panel-content">
+            <div class="panel-tag"><span class="panel-tag-dot"></span>Quy định</div>
+            <h1 class="panel-title">QUY ĐỊNH<br><span>ĐỘI 3</span></h1>
+            <p class="panel-subtitle">Nội quy & quy trình vận hành</p>
+            <div class="panel-divider"></div>
+            <p class="panel-desc">
+                Thông tin về nội quy, quy định nhân viên Đội 3 cần tuân thủ trong công tác bảo dưỡng Airbus A320/321.
+                Bao gồm quy định mượn/trả tool, 5S, an toàn lao động và phân công nhiệm vụ.
+            </p>
+            <a href="/rules" class="panel-cta">Truy cập <span class="panel-cta-arrow">→</span></a>
+        </div>
+        <div class="panel-number">04</div>
+    </div>
+
+</main>
+
+<!-- Bottom indicator dots -->
+<div class="section-dots" id="sectionDots"></div>
+
+<!-- Contact strip -->
+<div class="contact-strip">
+    <span>VAECO – Công ty TNHH MTV Kỹ thuật máy bay</span>
+    <span>·</span>
+    <span>A75 Đ.Trường Sơn, Tân Sơn Hòa, Tp.HCM</span>
+    <span>·</span>
+    <span>© 2026 Đội Bảo dưỡng Số 3</span>
+</div>
+
+<script>
+(function () {
+    const SECTIONS = [
+        { icon: '📷', label: 'Album đội' },
+        { icon: '🔍', label: 'Hot Spots' },
+        { icon: '🔧', label: 'Tool'      },
+        { icon: '📋', label: 'Quy định'  },
+    ];
+
+    const panels     = Array.from(document.querySelectorAll('.section-panel'));
+    const track      = document.getElementById('thumbsTrack');
+    const dotsWrap   = document.getElementById('sectionDots');
+    const btnUp      = document.getElementById('btnUp');
+    const btnDown    = document.getElementById('btnDown');
+
+    let current  = 0;
+    let images   = [];
+    let thumbEls = [];
+    let dotEls   = [];
+
+    // ── Build skeleton thumbnails ──
+    SECTIONS.forEach((s, i) => {
+        const t = document.createElement('div');
+        t.className = 'thumb' + (i === 0 ? ' active' : '');
+        t.title     = s.label;
+        t.dataset.idx = i;
+        t.innerHTML = `<div class="thumb-loading"><div class="spinner"></div></div>`;
+        t.addEventListener('click', () => goTo(i));
+        track.appendChild(t);
+        thumbEls.push(t);
+
+        const d = document.createElement('div');
+        d.className = 'dot' + (i === 0 ? ' active' : '');
+        d.addEventListener('click', () => goTo(i));
+        dotsWrap.appendChild(d);
+        dotEls.push(d);
+    });
+
+    // ── Load images from Google Drive (or static fallbacks) ──
+    fetch('/api/squad-images')
+        .then(r => r.json())
+        .then(data => {
+            images = data.images || [];
+            thumbEls.forEach((t, i) => {
+                const img = images[i];
+                if (img && img.url) {
+                    t.innerHTML = `<img src="${img.url}" alt="${SECTIONS[i].label}"
+                                        onerror="this.parentElement.innerHTML='<div class=thumb-fallback>${SECTIONS[i].icon}</div>'">`;
+                } else {
+                    t.innerHTML = `<div class="thumb-fallback">${SECTIONS[i].icon}</div>`;
+                }
+            });
+        })
+        .catch(() => {
+            thumbEls.forEach((t, i) => {
+                t.innerHTML = `<div class="thumb-fallback">${SECTIONS[i].icon}</div>`;
+            });
+        });
+
+    // ── Switch section ──
+    function goTo(idx) {
+        if (idx < 0 || idx >= panels.length) return;
+
+        panels[current].classList.remove('active');
+        thumbEls[current].classList.remove('active');
+        dotEls[current].classList.remove('active');
+
+        current = idx;
+
+        panels[current].classList.add('active');
+        thumbEls[current].classList.add('active');
+        dotEls[current].classList.add('active');
+    }
+
+    btnUp.addEventListener('click',   () => goTo((current - 1 + panels.length) % panels.length));
+    btnDown.addEventListener('click', () => goTo((current + 1) % panels.length));
+
+    // ── Keyboard navigation ──
+    document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowUp'   || e.key === 'ArrowLeft')  goTo((current - 1 + panels.length) % panels.length);
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') goTo((current + 1) % panels.length);
+    });
+
+    // ── Mouse wheel ──
+    document.addEventListener('wheel', e => {
+        if (e.deltaY > 0) goTo((current + 1) % panels.length);
+        else              goTo((current - 1 + panels.length) % panels.length);
+    }, { passive: true });
+
+    // ── Touch swipe ──
+    let touchY = 0;
+    document.addEventListener('touchstart', e => { touchY = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend',   e => {
+        const dy = touchY - e.changedTouches[0].clientY;
+        if (Math.abs(dy) > 40) {
+            if (dy > 0) goTo((current + 1) % panels.length);
+            else        goTo((current - 1 + panels.length) % panels.length);
+        }
+    }, { passive: true });
+})();
+</script>
+</body>
+</html>

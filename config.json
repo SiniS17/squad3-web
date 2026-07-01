@@ -1,0 +1,12 @@
+{
+  "_comment": "Edit this file to change tab/folder names without touching code. Restart the app after saving.",
+
+  "hotspot_tab": "Hotspot",
+  "tools_tab":   "Tool chuẩn bị",
+
+  "drive_images_root":    "",
+  "drive_hotspot_folder": "Hotspot",
+  "drive_album_folder":   "Album đội",
+
+  "google_service_account_email": "squad3@squad-website-501111.iam.gserviceaccount.com"
+}

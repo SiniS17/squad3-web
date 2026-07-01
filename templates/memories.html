@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Album Đội 3</title>
+    <link rel="icon" type="image/x-icon" href="static/images/favicon.png">
+    <link rel="stylesheet" href="static/assets/css/memories.css">
+    <link rel="stylesheet" href="static/assets/css/squad3.css">
+    <script src="static/assets/js/login.js"></script>
+</head>
+
+<body>
+
+    <!-- TOP BAR -->
+    <div class="topbar">
+        <a href="{{ url_for('home') }}" class="back-btn">Trang chủ</a>
+        <div class="page-title">ALBUM ĐỘI 3 – TTBD NỘI TRƯỜNG HCM</div>
+        <div class="logo-area">
+            <img src="static/images/vaeco-logo.png">
+        </div>
+        <div class="mode-area">
+            {% if edit_mode %}
+                <a href="{{ url_for('logout') }}" class="mode-btn">Đăng xuất</a>
+            {% else %}
+                <button id="loginBtn" class="mode-btn">Đăng nhập</button>
+            {% endif %}
+        </div>
+        <div class="mode-status">
+            {% if edit_mode %}
+                <span class="edit-mode">Chế độ chỉnh sửa</span>
+            {% else %}
+                <span class="view-mode">Chế độ xem</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="container">
+
+        {% if edit_mode %}
+        <div class="new-album-section">
+            <h2 class="section-heading">➕ Tạo Album Mới</h2>
+            <div class="new-album-form">
+                <input type="text" id="newAlbumName" class="album-name-input"
+                    placeholder="Tên album (vd: Tất niên 2025, Đào tạo A320...)">
+                <button class="create-album-btn" onclick="createAlbum()">Tạo Album</button>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- ALBUMS -->
+        <div id="albumsContainer">
+
+            {% for album in albums %}
+            <div class="album-card" id="album-{{ loop.index }}">
+                <div class="album-header">
+                    <div class="album-left">
+                        <div class="album-icon">📁</div>
+                        <div class="album-info">
+                            <div class="album-title">{{ album.name }}</div>
+                            <div class="album-meta">{{ album.photos | length }} mục &nbsp;·&nbsp; {{ album.date }}</div>
+                        </div>
+                    </div>
+                    {% if edit_mode %}
+                    <div class="album-actions">
+                        <label class="upload-photos-btn">
+                            + Thêm ảnh/video
+                            <input type="file" multiple accept="image/*,video/*" hidden
+                                onchange="uploadPhotos(this, '{{ album.id }}')">
+                        </label>
+                        <button class="delete-album-btn" onclick="deleteAlbum('{{ album.id }}')">🗑</button>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- PHOTO/VIDEO GRID -->
+                <div class="photo-grid" id="grid-{{ album.id }}">
+                    {% for photo in album.photos %}
+                    <div class="photo-item"
+                         onclick="openLightbox('{{ photo.url }}', '{{ album.name }}', '{{ photo.get('type', 'image') }}')">
+                        {% if photo.get('type') == 'video' %}
+                            <video src="{{ photo.url }}" muted playsinline
+                                   onmouseenter="this.play()"
+                                   onmouseleave="this.pause(); this.currentTime=0;">
+                            </video>
+                            <div class="video-badge">▶</div>
+                        {% else %}
+                            <img src="{{ photo.url }}" alt="Photo" loading="lazy">
+                        {% endif %}
+                        {% if edit_mode %}
+                        <button class="delete-photo-btn"
+                                onclick="event.stopPropagation(); deletePhoto('{{ photo.id }}', '{{ album.id }}', this)">✕</button>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+
+                    {% if album.photos | length == 0 %}
+                    <div class="empty-album">
+                        Chưa có ảnh nào. {{ '↑ Thêm ảnh để bắt đầu!' if edit_mode else '' }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+
+            {% if albums | length == 0 %}
+            <div class="no-albums">
+                <div class="no-albums-icon">📷</div>
+                <div class="no-albums-text">
+                    Chưa có album nào.
+                    {{ 'Tạo album đầu tiên ở trên!' if edit_mode else 'Đăng nhập để thêm ảnh.' }}
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <!-- LIGHTBOX -->
+    <div class="lightbox-overlay" id="lightboxOverlay" onclick="closeLightbox()">
+        <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+        <button class="lightbox-prev" onclick="event.stopPropagation(); prevPhoto()">&#8249;</button>
+        <div class="lightbox-content" id="lightboxContent" onclick="event.stopPropagation()"></div>
+        <button class="lightbox-next" onclick="event.stopPropagation(); nextPhoto()">&#8250;</button>
+    </div>
+
+    <!-- UPLOAD TOAST -->
+    <div class="upload-toast" id="uploadToast">
+        <div class="toast-bar" id="toastBar"></div>
+        <div class="toast-text" id="toastText">Đang tải lên...</div>
+    </div>
+
+    <!-- LOGIN POPUP -->
+    <div id="login-failed-popup" class="popup-overlay">
+        <div class="popup-box">
+            <h3>Đăng nhập thất bại</h3>
+            <p>Sai tên đăng nhập hoặc mật khẩu.</p>
+            <button id="popup-close-btn">OK</button>
+        </div>
+    </div>
+
+    <script src="static/assets/js/memories.js"></script>
+
+</body>
+</html>

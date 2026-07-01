@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh mục Tool A320/321 – Đội 3</title>
+    <link rel="icon" type="image/x-icon" href="/static/images/favicon.png">
+    <link rel="stylesheet" href="/static/assets/css/hotspot.css">
+    <link rel="stylesheet" href="/static/assets/css/squad3.css">
+    <style>
+        .topbar { background: linear-gradient(135deg, #1a4fa8, #0e3a8a) !important; }
+        .back-btn, .page-title { color: #fff !important; }
+        .back-btn { background: rgba(255,255,255,0.15) !important; border-color: rgba(255,255,255,0.3) !important; }
+        .back-btn:hover { background: rgba(255,255,255,0.25) !important; }
+
+        /* ── Notice banner ── */
+        .data-notice {
+            display: flex; align-items: center; gap: 10px;
+            margin: 12px 20px; padding: 10px 16px;
+            border-radius: 8px; font-size: 0.85rem; font-weight: 500;
+        }
+        .data-notice.mock { background: #fff8e1; border-left: 4px solid #f59e0b; color: #92400e; }
+        .data-notice.live { background: #ecfdf5; border-left: 4px solid #10b981; color: #065f46; }
+
+        /* ── Filter bar ── */
+        .filter-section {
+            display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap;
+            margin: 16px 20px; padding: 14px 18px;
+            background: #f8fafc; border-radius: 10px; border: 1px solid #e2e8f0;
+        }
+        .filter-box { display: flex; flex-direction: column; gap: 4px; }
+        .filter-box label {
+            font-size: 0.75rem; font-weight: 600;
+            color: #64748b; text-transform: uppercase; letter-spacing: 0.04em;
+        }
+        .filter-box select, .filter-box input[type="text"] {
+            padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px;
+            font-size: 0.85rem; background: #fff; min-width: 220px; color: #1e293b;
+        }
+        .search-btn {
+            padding: 7px 22px; background: #1a4fa8; color: #fff;
+            border: none; border-radius: 6px; cursor: pointer;
+            font-size: 0.85rem; font-weight: 600; transition: background 0.2s;
+        }
+        .search-btn:hover { background: #0e3a8a; }
+        .reset-btn {
+            padding: 7px 14px; background: #e2e8f0; color: #475569;
+            border: none; border-radius: 6px; cursor: pointer;
+            font-size: 0.85rem; font-weight: 600;
+        }
+        .reset-btn:hover { background: #cbd5e1; }
+
+        /* ── Stats ── */
+        .stats-bar {
+            display: flex; align-items: center; gap: 20px;
+            margin: 0 20px 8px; font-size: 0.82rem; color: #64748b;
+        }
+        .stats-bar strong { color: #1e293b; }
+
+        /* ── Cards container ── */
+        .cards-container {
+            display: flex; flex-direction: column; gap: 16px;
+            padding: 0 20px 30px;
+        }
+
+        /* ── Task card ── */
+        .task-card {
+            background: #fff; border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            transition: box-shadow 0.2s;
+        }
+        .task-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.10); }
+
+        /* Card header */
+        .card-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 11px 18px;
+            background: linear-gradient(135deg, #1a4fa8 0%, #0e3a8a 100%);
+            flex-wrap: wrap; gap: 8px;
+        }
+        .header-left { display: flex; align-items: center; gap: 10px; }
+        .aircraft-tag {
+            padding: 3px 10px; border-radius: 20px;
+            font-size: 0.72rem; font-weight: 700;
+            background: rgba(255,255,255,0.2); color: #fff;
+            white-space: nowrap;
+        }
+        .task-name {
+            font-size: 0.92rem; font-weight: 700; color: #fff;
+        }
+        .tool-count-badge {
+            padding: 3px 10px; border-radius: 20px;
+            font-size: 0.72rem; font-weight: 600;
+            background: rgba(0,0,0,0.2); color: rgba(255,255,255,0.8);
+            white-space: nowrap;
+        }
+
+        /* ── Inner table ── */
+        .tool-table-wrap { overflow-x: auto; }
+
+        table.tool-table {
+            width: 100%; border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+        table.tool-table thead tr {
+            background: #f1f5f9;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        table.tool-table thead th {
+            padding: 8px 16px;
+            text-align: left;
+            font-size: 0.72rem; font-weight: 700;
+            letter-spacing: 0.05em; text-transform: uppercase;
+            color: #64748b;
+        }
+        table.tool-table thead th.center { text-align: center; }
+
+        table.tool-table tbody tr {
+            border-bottom: 1px solid #f1f5f9;
+            transition: background 0.15s;
+        }
+        table.tool-table tbody tr:last-child { border-bottom: none; }
+        table.tool-table tbody tr:hover { background: #f8fafc; }
+
+        table.tool-table tbody td {
+            padding: 10px 16px;
+            color: #1e293b;
+            vertical-align: middle;
+        }
+        .row-num {
+            font-size: 0.75rem; font-weight: 600;
+            color: #94a3b8; text-align: center;
+        }
+        .tool-name { font-weight: 500; }
+        .pn-value  { font-family: monospace; font-size: 0.82rem; color: #475569; }
+        .qty-cell  { text-align: center; }
+        .qty-badge {
+            display: inline-flex; align-items: center; justify-content: center;
+            min-width: 36px; padding: 3px 10px;
+            background: #eef3fb; color: #1a4fa8;
+            border-radius: 20px; font-size: 0.82rem; font-weight: 700;
+            border: 1px solid #c7d9f5;
+        }
+
+        /* ── No results ── */
+        .no-results {
+            text-align: center; padding: 60px 20px; color: #94a3b8;
+        }
+        .no-results-icon { font-size: 3rem; margin-bottom: 12px; }
+    </style>
+</head>
+
+<body>
+
+    <!-- TOP BAR -->
+    <div class="topbar">
+        <a href="{{ url_for('home') }}" class="back-btn">Trang chủ</a>
+        <div class="page-title">DANH MỤC TOOL LẺ TÀU A320/321</div>
+        <div class="logo-area">
+            <img src="/static/images/vaeco-logo.png">
+        </div>
+    </div>
+
+    <!-- DATA NOTICE -->
+    {% if using_mock %}
+    <div class="data-notice mock">
+        <span>⚠️</span>
+        <span>
+            Đang hiển thị <strong>dữ liệu mẫu</strong>. Kết nối Google Sheets (tab "{{ google_error and 'Tool chuẩn bị' or 'Tool chuẩn bị' }}") sẽ được cấu hình ở Phase 2.
+            {% if google_error %}({{ google_error }}){% endif %}
+        </span>
+    </div>
+    {% else %}
+    <div class="data-notice live">
+        <span>✅</span>
+        <span>Dữ liệu từ <strong>Google Sheets</strong> – {{ tools_data | length }} dòng / {{ tasks | length }} công việc</span>
+    </div>
+    {% endif %}
+
+    <!-- FILTER SECTION -->
+    <div class="filter-section">
+        <div class="filter-box">
+            <label>Công việc (Task)</label>
+            <select id="taskFilter">
+                <option value="ALL">Tất cả</option>
+                {% for t in tasks %}
+                <option value="{{ t }}">{{ t }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="filter-box">
+            <label>Tìm kiếm tool / P/N</label>
+            <input type="text" id="searchInput" placeholder="Nhập từ khóa...">
+        </div>
+        <button class="search-btn" id="searchBtn">🔍 Lọc</button>
+        <button class="reset-btn"  id="resetBtn">✕ Xóa lọc</button>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-bar">
+        <span>Hiển thị: <strong id="visibleCount">{{ tasks | length }}</strong> / {{ tasks | length }} công việc</span>
+        <span>·</span>
+        <span>Nguồn: <strong>{{ 'Dữ liệu mẫu (Mock)' if using_mock else 'Google Sheets' }}</strong></span>
+    </div>
+
+    <!-- TASK CARDS (grouped by Task) -->
+    <div class="cards-container" id="cardsContainer">
+
+        {% set grouped = tools_data | groupby("task") %}
+        {% for task_name, items in grouped %}
+
+        {% set all_text = (task_name ~ ' ' ~ items | map(attribute='tool') | join(' ') ~ ' ' ~ items | map(attribute='part_number') | join(' ')) | lower %}
+
+        <div class="task-card"
+             data-task="{{ task_name }}"
+             data-search="{{ all_text }}">
+
+            <!-- Card header -->
+            <div class="card-header">
+                <div class="header-left">
+                    <div class="aircraft-tag">🔧 A320/321</div>
+                    <div class="task-name">{{ task_name }}</div>
+                </div>
+                <div class="tool-count-badge">{{ items | list | length }} tool</div>
+            </div>
+
+            <!-- Tool table -->
+            <div class="tool-table-wrap">
+                <table class="tool-table">
+                    <thead>
+                        <tr>
+                            <th class="center" style="width:42px">#</th>
+                            <th>🔩 Tool</th>
+                            <th>📦 Part Number</th>
+                            <th class="center" style="width:100px">Số lượng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr>
+                            <td class="row-num">{{ loop.index }}</td>
+                            <td class="tool-name">{{ item.tool if item.tool else '—' }}</td>
+                            <td class="pn-value">{{ item.part_number if item.part_number else '—' }}</td>
+                            <td class="qty-cell"><span class="qty-badge">{{ item.so_luong if item.so_luong else '—' }}</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        {% endfor %}
+
+        <div class="no-results" id="noResults" style="display:none;">
+            <div class="no-results-icon">🔍</div>
+            <p>Không tìm thấy công việc phù hợp.</p>
+        </div>
+
+    </div>
+
+    <script>
+    (function () {
+        const taskFilter   = document.getElementById('taskFilter');
+        const searchInput  = document.getElementById('searchInput');
+        const searchBtn    = document.getElementById('searchBtn');
+        const resetBtn     = document.getElementById('resetBtn');
+        const cards        = Array.from(document.querySelectorAll('.task-card'));
+        const noResults    = document.getElementById('noResults');
+        const visibleCount = document.getElementById('visibleCount');
+
+        function applyFilter() {
+            const task    = taskFilter.value;
+            const keyword = searchInput.value.trim().toLowerCase();
+            let visible   = 0;
+
+            cards.forEach(card => {
+                const cardTask   = card.dataset.task   || '';
+                const cardSearch = card.dataset.search || '';
+                const matchTask  = task === 'ALL' || cardTask === task;
+                const matchKw    = !keyword || cardSearch.includes(keyword);
+                const show       = matchTask && matchKw;
+                card.style.display = show ? '' : 'none';
+                if (show) visible++;
+            });
+
+            visibleCount.textContent = visible;
+            noResults.style.display  = visible === 0 ? 'block' : 'none';
+        }
+
+        function resetFilter() {
+            taskFilter.value  = 'ALL';
+            searchInput.value = '';
+            applyFilter();
+        }
+
+        searchBtn.addEventListener('click', applyFilter);
+        resetBtn.addEventListener('click',  resetFilter);
+        searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') applyFilter(); });
+    })();
+    </script>
+
+</body>
+</html>

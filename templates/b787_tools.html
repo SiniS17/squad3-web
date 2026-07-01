@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh mục tool cho tàu B787</title>
+    <link rel="icon" type="image/x-icon" href="static/images/favicon.png">
+    <link rel="stylesheet" href="static/assets/css/b787_tools.css">
+
+</head>
+
+<body>
+
+    <!-- TOP BAR -->
+
+    <div class="topbar">
+
+        <a href="{{ url_for('home') }}" class="back-btn">
+            Trang chủ
+        </a>
+
+        <div class="page-title">
+             Danh mục tool tàu B787
+        </div>
+
+        <div class="logo-area">
+            <img src="static/images/vaeco-logo.png">
+        </div>
+
+    </div>
+
+    <!-- MAIN CONTAINER -->
+
+    <div class="container">
+
+        <!-- FILTER SECTION -->
+
+<!--        <div class="filter-section">-->
+
+<!--            <div class="filter-box">-->
+
+<!--                <label>Aircraft</label>-->
+
+<!--                <select>-->
+<!--                    <option>B787</option>-->
+<!--                    <option>A350</option>-->
+<!--                    <option>A321</option>-->
+<!--                </select>-->
+
+<!--            </div>-->
+
+<!--            <div class="filter-box">-->
+
+<!--                <label>Task Type</label>-->
+
+<!--                <select>-->
+<!--                    <option>ALL</option>-->
+<!--                    <option>A-CHECK</option>-->
+<!--                    <option>C-CHECK</option>-->
+<!--                </select>-->
+
+<!--            </div>-->
+
+<!--            <div class="filter-box">-->
+
+<!--                <label>Search</label>-->
+
+<!--                <input type="text" placeholder="Search tool or task...">-->
+
+<!--            </div>-->
+
+<!--        </div>-->
+
+        <!-- TABLE CARD -->
+
+        <div class="table-card">
+
+            <div class="table-header">
+
+                <div class="header-title">
+                    📋 Danh mục tool lẻ tàu B787
+                </div>
+
+                <div class="header-info">
+                    B787 Maintenance Tools
+                </div>
+
+            </div>
+
+            <!-- TABLE -->
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th class="col-tt">
+                                STT
+                            </th>
+
+                            <th class="col-task">
+                                Công việc
+                            </th>
+
+                            <th class="col-tool">
+                                Tool
+                            </th>
+
+                            <th class="col-qty">
+                                Số lượng
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <!-- ROW 1 -->
+                        <tr>
+
+                            <td>
+                                1
+                            </td>
+
+                            <td>
+                                Torque đo gas spring
+                            </td>
+
+                            <td>
+                                DIW-75
+                            </td>
+
+                            <td>
+                                1
+                            </td>
+
+                        </tr>
+
+                        <!-- ROW 2 -->
+                        <tr>
+
+                            <td>
+                                2
+                            </td>
+
+                            <td>
+                                Thay nến đánh lửa
+                            </td>
+
+                            <td>
+                                Cờ lê 1-3/8 <br>
+                                Cờ lê 1-1/8 <br>
+                                Càng cua 1-3/8 <br>
+                                Càng cua 1-1/8 <br>
+                                Tuýp dài 1-1/8 <br>
+                                Breaker bar 1/2 <br>
+                                Adapter chuyển 1/2 qua 3/8 <br>
+                                Extension dài <br>
+                                Extension ngắn <br>
+                                Adapter chuyển từ 3/8 qua 1/2
+                            </td>
+
+                            <td>
+                                1 <br>
+                                1 <br>
+                                1 <br>
+                                1 <br>
+                                1 <br>
+                                2 <br>
+                                2 <br>
+                                2 <br>
+                                1 <br>
+                                1
+                            </td>
+
+                        </tr>
+
+                        <!-- ROW 3 -->
+                        <tr>
+
+                            <td>
+                                3
+                            </td>
+
+                            <td>
+                                Thay EDP
+                            </td>
+
+                            <td>
+                                Càng cua 1-7/8 <br>
+                                Cờ lê 1-1/4 <br>
+                                Breaker bar 1/2'
+                            </td>
+
+                            <td>
+                                1 <br>
+                                1 <br>
+                                1
+                            </td>
+                        </tr>
+
+                        <!-- ROW 4 -->
+                        <tr>
+
+                            <td>
+                                4
+                            </td>
+
+                            <td>
+                                Thay Spoiler PCU
+                            </td>
+
+                            <td>
+                                Cờ lê 1-5/8 <br>
+                                Socket 7/8 <br>
+                                Socket 15/16 <br>
+                                Breaker bar 1/2' <br>
+                            </td>
+
+                            <td>
+                                1 <br>
+                                1 <br>
+                                1 <br>
+                                1
+                            </td>
+
+                        </tr>
+
+                         <!-- ROW 5 -->
+                        <tr>
+
+                            <td>
+                                5
+                            </td>
+
+                            <td>
+                                Thay RAT Pump and Control module
+                            </td>
+
+                            <td>
+                                Càng cua 1-1/2 <br>
+                                Càng cua 1-1/4 <br>
+                                Breaker bar 1/2' <br>
+                                Allen key 5/16 <br>
+                                Allen key 5/32 <br>
+                                8MM
+                            </td>
+
+                            <td>
+                                1 <br>
+                                1 <br>
+                                1 <br>
+                                1 <br>
+                                1 <br>
+                                1
+                            </td>
+
+                        </tr>
+
+                        <!-- ROW 6 -->
+                        <tr>
+
+                            <td>
+                                6
+                            </td>
+
+                            <td>
+                                Thay lọc return Hyd
+                            </td>
+
+                            <td>
+                                Cờ lê 1-1/4
+                            </td>
+
+                            <td>
+                                1
+                            </td>
+
+                        </tr>
+
+                        <!-- ROW 7 -->
+                        <tr>
+
+                            <td>
+                                7
+                            </td>
+
+                            <td>
+                                Thay lọc press Hyd
+                            </td>
+
+                            <td>
+                                Cờ lê 1-1/2
+                            </td>
+
+                            <td>
+                                1
+                            </td>
+
+                        </tr>
+
+                        <!-- ROW 8 -->
+                        <tr>
+
+                            <td>
+                                8
+                            </td>
+
+                            <td>
+                                Thay CAC
+                            </td>
+
+                            <td>
+                                Cờ lê 1-5/8
+                            </td>
+
+                            <td>
+                                1
+                            </td>
+
+                        </tr>
+
+                        <!-- ROW 9 -->
+                        <tr>
+
+                            <td>
+                                9
+                            </td>
+
+                            <td>
+                                Tháo quick dis edp hyd hose pylon
+                            </td>
+
+                            <td>
+                                1/16 inch
+                            </td>
+
+                            <td>
+                                2
+                            </td>
+
+                        </tr>
+
+                        <!-- ROW 10 -->
+                        <tr>
+
+                            <td>
+                                10
+                            </td>
+
+                            <td>
+                                Service động cơ
+                            </td>
+
+                            <td>
+                                Thanh Đồng <br>
+                                Đầu socket allenkey 5/32 <br>
+                                Socket 1 inch lục giác <br>
+                                Adapter 3/8 to 1/2 <br>
+                                Súng + đầu vít 25
+                            </td>
+
+                            <td>
+                                1 <br>
+                                1 <br>
+                                1 <br>
+                                1 <br>
+                                N/A
+                            </td>
+
+                        </tr>
+
+                        <!-- ROW 11 -->
+                        <tr>
+
+                            <td>
+                                11
+                            </td>
+
+                            <td>
+                                Thay rudder pcu
+                            </td>
+
+                            <td>
+                                Socket 1-1/8 <br>
+                                Cờ lê tròng 1-1/8 <br>
+                                Cờ lê tròng 1-1/16 <br>
+                                Càng cua 1 inch và 7/8 <br>
+                                Cờ lê miệng 1 inch <br>
+                                Cờ lê miệng 1-1/8
+                            </td>
+
+                            <td>
+                                2 <br>
+                                1 <br>
+                                1 <br>
+                                1 <br>
+                                1 <br>
+                                1
+                            </td>
+
+                        </tr>
+
+                        <!-- ROW 12 -->
+                        <tr>
+
+                            <td>
+                                12
+                            </td>
+
+                            <td>
+                                Thay lọc NGS
+                            </td>
+
+                            <td>
+                                Cờ lê dây <br>
+                                Tuýp dài 3/4 <br>
+                                Breaker bar <br>
+                                Đầu chuyển 1/2 qua 3/8
+                            </td>
+
+                            <td>
+                                1 <br>
+                                1 <br>
+                                1 <br>
+                                1
+                            </td>
+
+                        </tr>
+
+                        <!-- ROW 13 -->
+                        <tr>
+
+                            <td>
+                                13
+                            </td>
+
+                            <td>
+                                Service EMA
+                            </td>
+
+                            <td>
+                                Hex socket driver 5/32' <br>
+                                Thước dây
+                            </td>
+
+                            <td>
+                                1 <br>
+                                1
+                            </td>
+
+                        </tr>
+
+                        <!-- ROW 14 -->
+                        <tr>
+
+                            <td>
+                                14
+                            </td>
+
+                            <td>
+                                Fuc Flap actuator
+                            </td>
+
+                            <td>
+                                Hex socket driver 1/4 (Loại dài)
+                            </td>
+
+                            <td>
+                                1
+                            </td>
+
+                        </tr>
+
+                        <!-- ROW 15 -->
+                        <tr>
+
+                            <td>
+                                15
+                            </td>
+
+                            <td>
+                                 Đo "Dimension A" NLG & MLG
+                            </td>
+
+                            <td>
+                                Thước dây
+                            </td>
+
+                            <td>
+                                1
+                            </td>
+
+                        </tr>
+
+                        <!-- ROW 16 -->
+                        <tr>
+
+                            <td>
+                                16
+                            </td>
+
+                            <td>
+                                 Thay VFSG
+                            </td>
+
+                            <td>
+                                Allen key 5/32 <br>
+                                Cờ lê 1-1/4  <br>
+                                Cờ lê 1 <br>
+                                Cở lê 7/8 <br>
+                                Càng cua 1-1/4 <br>
+                                Breaker bar 3/8 <br>
+                                Thanh đồng <br>
+                                Dây kẽm
+                            </td>
+
+                            <td>
+                                1 <br>
+                                1 <br>
+                                1 <br>
+                                1 <br>
+                                1 <br>
+                                1 <br>
+                                1 <br>
+                                N/A
+                            </td>
+
+                        </tr>
+
+                        <!-- ROW 17 -->
+                        <tr>
+
+                            <td>
+                                17
+                            </td>
+
+                            <td>
+                                 Task stand pipe
+                            </td>
+
+                            <td>
+                                Cờ lê dây (strap wrench) <br>
+                                Mỏ lết to <br>
+                                Càng cua 1-7/8 <br>
+                                Breaker bar 1/2
+                            </td>
+
+                            <td>
+                                1 <br>
+                                1 <br>
+                                1 <br>
+                                1
+                            </td>
+
+                        </tr>
+
+                        <!-- ROW 18 -->
+                        <tr>
+
+                            <td>
+                                18
+                            </td>
+
+                            <td>
+                                 Tool lọc nước
+                            </td>
+
+                            <td>
+                                Tuýp 2-1/4 <br>
+                                Cờ lê 1-3/8 <br>
+                                Đầu chuyển 1/2 - 3/4 <br>
+                                Breaker bar
+                            </td>
+
+                            <td>
+                                1 <br>
+                                1 <br>
+                                1 <br>
+                                1
+                            </td>
+
+                        </tr>
+
+                        <!-- ROW 19 -->
+                        <tr>
+
+                            <td>
+                                19
+                            </td>
+
+                            <td>
+                                 Thay Tilt Actuator OF MLG
+                            </td>
+
+                            <td>
+                                Cờ lê miệng 1 inch <br>
+                                Cờ lê miệng 11/32 <br>
+                                Cờ lê miệng 1-7/16 <br>
+                                Socket 1-1/8 <br>
+                                Breaker bar 1/2
+                            </td>
+
+                            <td>
+                                1 <br>
+                                1 <br>
+                                1 <br>
+                                1 <br>
+                                1
+                            </td>
+
+                        </tr>
+
+                        <!-- ROW 20 -->
+                        <tr>
+
+                            <td>
+                                20
+                            </td>
+
+                            <td>
+                                 Thay elevator pcu
+                            </td>
+
+                            <td>
+                                Cờ lê tròng 1-1/16 <br>
+                                Cờ lê miệng 1-1/8 <br> 
+                                Deep socket 1-1/8 <br>
+                                Socket 1 inch <br>
+                                Socket 15/16 <br>
+                                Breaker bar lớn <br>
+                                Extension lớn <br>
+                                Dò gà lớn <br> 
+                                Đầu chuyển 3/8-1/2
+                            </td>
+
+                            <td>
+                                1 <br>
+                                1 <br>
+                                1 <br>
+                                1 <br>
+                                1 <br>
+                                1 <br>
+                                2 <br>
+                                1 <br>
+                                1
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <!-- TABLE CARD -->
+
+        <div class="table-card-ENGCHG">
+
+            <div class="table-header">
+
+                <div class="header-title">
+                    📋 Danh mục tool thay động cơ tàu B787
+                </div>
+
+                <div class="header-info">
+                    B787 Engine Change Tools
+                </div>
+
+            </div>
+
+            <!-- TABLE -->
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th class="col-tt">
+                                Item
+                            </th>
+
+                            <th class="col-task">
+                                Công việc
+                            </th>
+
+                            <th class="col-tool">
+                                Tool
+                            </th>
+
+                            <th class="col-qty">
+                                P/N
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <!-- ROW 1 -->
+                        <tr>
+
+                            <td>
+                                1
+                            </td>
+
+                            <td>
+                                Preservation < 2 years
+                            </td>
+
+                            <td>
+                                Preservation kit
+                            </td>
+
+                            <td>
+                                11C4552P03
+                            </td>
+
+                        </tr>
+
+                        <!-- ROW 2 -->
+                        <tr>
+
+                            <td>
+                                2
+                            </td>
+
+                            <td>
+                                Safety Equipment
+                            </td>
+
+                            <td>
+                                Safety Equipment
+                            </td>
+
+                            <td>
+                                J20004/5/6-1
+                            </td>
+
+                        </tr>
+
+                        <!-- ROW 3 -->
+                        <tr>
+
+                            <td>
+                                3
+                            </td>
+
+                            <td>
+                                R/I inlet cowl
+                            </td>
+
+                            <td>
+                                Sling <br>
+                                Gauge (0- 4000 lb/Kg)
+                            </td>
+
+                            <td>
+                                J71001-66 <br>
+                                STD
+                            </td>
+                        </tr>
+
+                        <!-- ROW 4 -->
+                        <tr>
+
+                            <td>
+                                4
+                            </td>
+
+                            <td>
+                                R/I Fan cowl
+                            </td>
+
+                            <td>
+                                Gauge (0- 1000 lb/Kg) <br>
+                                Sling
+                            </td>
+
+                            <td>
+                                STD <br>
+                                K71009-36
+                            </td>
+
+                        </tr>
+
+                         <!-- ROW 5 -->
+                        <tr>
+
+                            <td>
+                                5
+                            </td>
+
+                            <td>
+                                R/I VFSG
+                            </td>
+
+                            <td>
+                                Fixture - R/I LRU <br>
+                                Protective Cover <br>
+                                Lifting eye <br>
+                                Oil Servicing cart
+                            </td>
+
+                            <td>
+                                11C4412G04 <br>
+                                11C4593G02 <br>
+                                SPL-1626 <br>
+                                STD
+                            </td>
+
+                        </tr>
+
+                        <!-- ROW 6 -->
+                        <tr>
+
+                            <td>
+                                6
+                            </td>
+
+                            <td>
+                                R/I ENGINE
+                            </td>
+
+                            <td>
+                                ENGINE R/I kit <br>
+                                Stand
+                            </td>
+
+                            <td>
+                                K71001-143 <br>
+                                11C4487P02
+                            </td>
+
+                        </tr>
+
+                        <!-- ROW 7 -->
+                        <tr>
+
+                            <td>
+                                7
+                            </td>
+
+                            <td>
+                                T/R hold open
+                            </td>
+
+                            <td>
+                                Hand pump
+                            </td>
+
+                            <td>
+                                A78019-29
+                            </td>
+
+                        </tr>
+
+                        <!-- ROW 8 -->
+                        <tr>
+
+                            <td>
+                                8
+                            </td>
+
+                            <td>
+                                R/I thrust link+ Aft mount
+                            </td>
+
+                            <td>
+                                Hoist Equip <br>
+                                Thread protector
+                            </td>
+
+                            <td>
+                                K71006-20 <br>
+                                G71048-1
+                            </td>
+
+                        </tr>
+
+                        <!-- ROW 9 -->
+                        <tr>
+
+                            <td>
+                                9
+                            </td>
+
+                            <td>
+                                Fancase Separation
+                            </td>
+
+                            <td>
+                                Fixture-Fancase Separation <br>
+                                Slider hammer <br>
+                                Personnel Step <br>
+                                Fancase acoustic liner protectỏ <br>
+                                Fancase storage
+                            </td>
+
+                            <td>
+                                11C4490P02 <br>
+                                11C33398G01 <br>
+                                11C4616G04 <br>
+                                11C3331G02 <br>
+                                11C3004P02
+                            </td>
+
+                        </tr>
+
+                        <!-- ROW 10 -->
+                        <tr>
+
+                            <td>
+                                10
+                            </td>
+
+                            <td>
+                                R/I Fancowl Support beam
+                            </td>
+
+                            <td>
+                                Sling
+                            </td>
+
+                            <td>
+                                K71008-37
+                            </td>
+
+                        </tr>
+
+                        <!-- ROW 11 -->
+                        <tr>
+
+                            <td>
+                                11
+                            </td>
+
+                            <td>
+                                Lift ENGINE
+                            </td>
+
+                            <td>
+                                Sling
+                            </td>
+
+                            <td>
+                                11C4484P03
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
