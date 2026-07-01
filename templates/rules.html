@@ -15,9 +15,16 @@
     <!-- TOP BAR -->
     <div class="topbar">
 
-        <a href="{{ url_for('home') }}" class="home-btn">
-            Trang chủ
-        </a>
+        <nav class="sub-nav">
+            <button class="sub-nav-toggle">☰&nbsp; Điều hướng</button>
+            <div class="sub-nav-menu">
+                <a href="/"><span class="nav-icon">🏠</span> Trang chủ</a>
+                <a href="/memories"><span class="nav-icon">📸</span> Album Đội 3</a>
+                <a href="/hotspot"><span class="nav-icon">✈</span> Hot Spots</a>
+                <a href="/tools"><span class="nav-icon">🔧</span> Danh mục Tool</a>
+                <a href="/rules" class="current"><span class="nav-icon">📋</span> Quy định</a>
+            </div>
+        </nav>
 
         <div class="logo-area">
             <img src="static/images/vaeco-logo.png" alt="Company Logo">

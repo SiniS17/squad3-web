@@ -131,19 +131,19 @@ def _list_images_in_folder(drive_svc, folder_id, page_size=100):
     return res.get("files", [])
 
 
-def get_images_from_drive_path(*path_parts):
+def get_album_images_from_drive():
     """
-    High-level helper: resolve path under GOOGLE_DRIVE_FOLDER_ID and
-    return a list of {id, name, url} dicts, or None if not configured.
+    Return list of {id, name, url} from DRIVE_ALBUM_FOLDER_ID directly.
+    Falls back to None if not configured.
     """
     if not _is_google_configured():
         return None
+    folder_id = os.environ.get("DRIVE_ALBUM_FOLDER_ID", "").strip()
+    if not folder_id:
+        return None
     try:
-        svc    = _drive_service()
-        folder = _resolve_folder(svc, *path_parts)
-        if folder is None:
-            return []
-        files = _list_images_in_folder(svc, folder)
+        svc   = _drive_service()
+        files = _list_images_in_folder(svc, folder_id)
         return [
             {"id": f["id"], "name": f["name"],
              "url": f"/proxy-drive-image?file_id={f['id']}"}
@@ -153,48 +153,28 @@ def get_images_from_drive_path(*path_parts):
         return None
 
 
-def find_image_id_in_drive_path(filename, *path_parts):
+def find_hotspot_image_id(filename):
     """
-    Search for an image file by name inside a specific subfolder path.
-    Strategy:
-      1. Exact name match inside the target subfolder.
-      2. Name + common image extensions inside the target subfolder.
-      3. Same two steps but in the root GOOGLE_DRIVE_FOLDER_ID as fallback.
+    Search for a hotspot image by name inside DRIVE_HOTSPOT_FOLDER_ID.
+    Matches by exact filename or by name stem (ignoring extension).
     Returns the Drive file_id or None.
     """
     if not _is_google_configured() or not filename:
         return None
-
-    IMG_EXTS = ("", ".jpg", ".jpeg", ".png", ".webp", ".gif", ".JPG", ".PNG")
-
-    def _search_in_folder(fid, name):
-        for ext in IMG_EXTS:
-            q   = f"name='{name}{ext}' and '{fid}' in parents and trashed=false"
-            res = _drive_service().files().list(
-                q=q, fields="files(id,name)", pageSize=1
-            ).execute()
-            files = res.get("files", [])
-            if files:
-                return files[0]["id"]
+    folder_id = os.environ.get("DRIVE_HOTSPOT_FOLDER_ID", "").strip()
+    if not folder_id:
         return None
 
+    stem = os.path.splitext(filename)[0].lower()
     try:
-        svc    = _drive_service()
-        folder = _resolve_folder(svc, *path_parts)
-
-        # 1 + 2: target subfolder
-        if folder:
-            fid = _search_in_folder(folder, filename)
-            if fid:
-                return fid
-
-        # 3: root folder fallback
-        root = os.environ.get("GOOGLE_DRIVE_FOLDER_ID", "")
-        if root and root != folder:
-            fid = _search_in_folder(root, filename)
-            if fid:
-                return fid
-
+        q   = f"'{folder_id}' in parents and trashed=false and mimeType contains 'image/'"
+        res = _drive_service().files().list(
+            q=q, fields="files(id,name)", pageSize=200
+        ).execute()
+        for f in res.get("files", []):
+            fname_stem = os.path.splitext(f["name"])[0].lower()
+            if fname_stem == stem or f["name"].lower() == filename.lower():
+                return f["id"]
         return None
     except Exception:
         return None
@@ -377,37 +357,105 @@ def hotspot():
 def proxy_drive_image():
     """
     Proxy a Google Drive image by file_id or filename.
-    For hotspot images: ?filename=xxx  (searches inside Hình ảnh/Hotspot)
+    For hotspot images: ?filename=xxx  (searches local static/images/B787-hotspots/ first,
+                                        then Google Drive inside Hình ảnh/Hotspot)
     For direct id:      ?file_id=xxx
     """
     import urllib.request
+    import mimetypes
 
     file_id  = request.args.get("file_id", "")
     filename = request.args.get("filename", "")
 
+    # ── 1. Check local hotspot image folder first ──────────────────────────────
+    if filename and not file_id:
+        local_dirs = [
+            os.path.join(os.path.dirname(__file__), "static", "uploads", "hotspot"),
+            os.path.join(os.path.dirname(__file__), "static", "images", "B787-hotspots"),
+            os.path.join(os.path.dirname(__file__), "static", "images"),
+            os.path.join(os.path.dirname(__file__), "static", "uploads"),
+        ]
+        for local_dir in local_dirs:
+            local_path = os.path.join(local_dir, filename)
+            if os.path.isfile(local_path):
+                ct = mimetypes.guess_type(local_path)[0] or "image/jpeg"
+                with open(local_path, "rb") as f:
+                    return Response(f.read(), content_type=ct)
+
+    # ── 2. Look up in DRIVE_HOTSPOT_FOLDER_ID directly ────────────────────────
     if not file_id and filename:
-        images_root    = cfg("drive_images_root", "Hình ảnh")
-        hotspot_folder = cfg("drive_hotspot_folder", "Hotspot")
-        file_id = find_image_id_in_drive_path(filename, images_root, hotspot_folder) or ""
+        file_id = find_hotspot_image_id(filename) or ""
 
     if not file_id:
         return "", 404
 
-    url = f"https://drive.google.com/uc?export=view&id={file_id}"
+    # ── 3. Download via authenticated Drive API and cache locally ──────────────
     try:
-        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-        with urllib.request.urlopen(req, timeout=10) as resp:
-            ct   = resp.headers.get("Content-Type", "image/jpeg")
-            body = resp.read()
-        return Response(body, content_type=ct)
+        import io, mimetypes
+        from googleapiclient.http import MediaIoBaseDownload
+
+        svc    = _drive_service()
+        meta   = svc.files().get(fileId=file_id, fields="mimeType,name").execute()
+        ct     = meta.get("mimeType", "image/jpeg")
+        fname  = meta.get("name", file_id)
+
+        # Determine cache path
+        ext        = mimetypes.guess_extension(ct) or ".jpg"
+        cache_name = secure_filename(fname) if fname else (file_id + ext)
+        cache_dir  = os.path.join(os.path.dirname(__file__), "static", "uploads", "hotspot")
+        os.makedirs(cache_dir, exist_ok=True)
+        cache_path = os.path.join(cache_dir, cache_name)
+
+        # Serve from cache if already downloaded
+        if os.path.isfile(cache_path):
+            with open(cache_path, "rb") as f:
+                return Response(f.read(), content_type=ct)
+
+        # Download from Drive and save to cache
+        dl_req = svc.files().get_media(fileId=file_id)
+        buf    = io.BytesIO()
+        dl     = MediaIoBaseDownload(buf, dl_req)
+        done   = False
+        while not done:
+            _, done = dl.next_chunk()
+        data = buf.getvalue()
+
+        with open(cache_path, "wb") as f:
+            f.write(data)
+
+        return Response(data, content_type=ct)
     except Exception:
         return "", 404
+
+
+# ── Hotspot image upload ───────────────────────────────────────────────────────
+
+@app.route("/upload-hotspot-image", methods=["POST"])
+def upload_hotspot_image():
+    """Save an uploaded hotspot image locally to static/uploads/hotspot/."""
+    if not session.get("edit_mode"):
+        return jsonify({"success": False, "error": "Not authorised"}), 403
+
+    file = request.files.get("image")
+    if not file or file.filename == "":
+        return jsonify({"success": False, "error": "No file provided"}), 400
+
+    filename = secure_filename(file.filename)
+    upload_dir = os.path.join(os.path.dirname(__file__), "static", "uploads", "hotspot")
+    os.makedirs(upload_dir, exist_ok=True)
+    file.save(os.path.join(upload_dir, filename))
+    return jsonify({
+        "success": True,
+        "url": f"/static/uploads/hotspot/{filename}",
+        "filename": filename,
+    })
 
 
 # ── Tools ─────────────────────────────────────────────────────────────────────
 
 @app.route("/tools")
 def a320_tools():
+    from tools_config import TOOLS_TABLE as tools_cfg
     data, error = fetch_tools_from_sheets()
     using_mock  = data is None
     if using_mock:
@@ -419,6 +467,7 @@ def a320_tools():
         tasks=tasks,
         using_mock=using_mock,
         google_error=error,
+        tools_cfg=tools_cfg,
     )
 
 
@@ -426,9 +475,7 @@ def a320_tools():
 
 @app.route("/api/squad-images")
 def api_squad_images():
-    images_root  = cfg("drive_images_root",  "Hình ảnh")
-    album_folder = cfg("drive_album_folder", "Album đội")
-    images = get_images_from_drive_path(images_root, album_folder)
+    images = get_album_images_from_drive()
     if images is None:
         # Google not configured → static fallbacks
         images = [
@@ -438,6 +485,27 @@ def api_squad_images():
             {"id": "s4", "name": "rules",   "url": "/static/images/pic01.jpg"},
         ]
     return jsonify({"images": images})
+
+
+# ── Drive diagnostic API ──────────────────────────────────────────────────────
+
+@app.route("/api/drive-debug")
+def drive_debug():
+    """List files visible in both Drive folders for troubleshooting."""
+    result = {"hotspot": [], "album": [], "errors": {}}
+    for key, label in [("DRIVE_HOTSPOT_FOLDER_ID", "hotspot"), ("DRIVE_ALBUM_FOLDER_ID", "album")]:
+        folder_id = os.environ.get(key, "").strip()
+        if not folder_id:
+            result["errors"][label] = f"{key} not set"
+            continue
+        try:
+            svc = _drive_service()
+            q   = f"'{folder_id}' in parents and trashed=false"
+            res = svc.files().list(q=q, fields="files(id,name,mimeType)", pageSize=50).execute()
+            result[label] = [{"name": f["name"], "id": f["id"], "type": f["mimeType"]} for f in res.get("files", [])]
+        except Exception as e:
+            result["errors"][label] = str(e)
+    return jsonify(result)
 
 
 # ── Config debug API ──────────────────────────────────────────────────────────
