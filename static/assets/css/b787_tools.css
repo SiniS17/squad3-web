@@ -1,0 +1,305 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#edf2f4;
+    color:#222;
+}
+
+/* TOP BAR */
+
+.topbar{
+    background:#19809A;
+    padding:15px 25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    position:sticky;
+    top:0;
+    z-index:1000;
+    box-shadow:0 2px 10px rgba(0,0,0,0.15);
+}
+
+.back-btn{
+    text-decoration:none;
+    background:#CC9933;
+    color:white;
+    padding:10px 18px;
+    border-radius:10px;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+.back-btn:hover{
+    opacity:0.9;
+}
+
+.page-title{
+    color:white;
+    font-size:28px;
+    font-weight:bold;
+}
+
+.logo-area img{
+    height:55px;
+}
+
+/* MAIN */
+
+.container{
+    max-width:1400px;
+    margin:auto;
+    padding:30px 20px;
+}
+
+/* FILTER SECTION */
+
+.filter-section{
+    background:white;
+    border-radius:18px;
+    padding:20px;
+    margin-bottom:30px;
+    display:flex;
+    gap:20px;
+    flex-wrap:wrap;
+    box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+
+.filter-box{
+    display:flex;
+    flex-direction:column;
+    min-width:250px;
+}
+
+.filter-box label{
+    margin-bottom:8px;
+    font-weight:bold;
+    color:#19809A;
+}
+
+.filter-box select,
+.filter-box input{
+    padding:12px;
+    border-radius:10px;
+    border:1px solid #ccc;
+    font-size:15px;
+}
+
+/* TABLE CARD */
+
+.table-card{
+    background:white;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 6px 16px rgba(0,0,0,0.08);
+    margin-bottom: 40px;
+}
+
+.table-card-ENGCHG{
+    background:white;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 6px 16px rgba(0,0,0,0.08);
+}
+/* TABLE HEADER */
+
+.table-header{
+    background:#19809A;
+    color:white;
+    padding:20px 25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.header-title{
+    font-size:24px;
+    font-weight:bold;
+}
+
+.header-info{
+    background:rgba(255,255,255,0.15);
+    padding:10px 15px;
+    border-radius:10px;
+    font-weight:bold;
+}
+
+/* TABLE */
+
+.table-wrapper{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+  }
+  th, td {
+    padding: 12px 8px; /* Adds space inside the cells for readability */
+    border-bottom: 1px solid #19809A;
+}
+
+thead{
+    background:#f3f7f8;
+}
+
+th{
+    padding:18px;
+    text-align:left;
+    color:#19809A;
+    font-size:17px;
+    border-bottom:2px solid #ddd;
+}
+
+td{
+    padding:18px;
+    border-bottom:1px solid #eee;
+    vertical-align:top;
+    line-height:1.6;
+}
+
+tr:hover{
+    background:#fafafa;
+}
+
+tbody tr:hover {
+  background-color: #CC9933 !important;
+}
+
+/* COLUMN WIDTH */
+
+.col-tt{
+    width:100px;
+    th{
+    align:center
+    }
+}
+
+.col-task{
+    width:45%;
+}
+
+.col-tool{
+    width:45%;
+}
+
+/* Optional: Header styling */
+.table-wrapper th {
+  background: #f4f4f4;
+  font-weight: bold;
+}
+
+/* =========================================
+MOBILE
+========================================= */
+
+@media(max-width:768px){
+
+    /* ---------- TOPBAR ---------- */
+
+    .topbar{
+        padding:10px 12px;
+        gap:10px;
+    }
+
+    .back-btn{
+        padding:8px 12px;
+        font-size:13px;
+        white-space:nowrap;
+    }
+
+    .page-title{
+        font-size:16px;
+        text-align:center;
+        flex:1;
+        line-height:1.4;
+    }
+
+    .logo-area img{
+        height:38px;
+    }
+
+    /* ---------- MAIN ---------- */
+
+    .container{
+        padding:18px 10px;
+    }
+
+    /* ---------- TABLE CARD ---------- */
+
+    .table-card,
+    .table-card-ENGCHG{
+        border-radius:14px;
+        overflow:hidden;
+    }
+
+    .table-header{
+        padding:14px;
+        gap:10px;
+    }
+
+    .header-title{
+        font-size:17px;
+        line-height:1.4;
+    }
+
+    .header-info{
+        font-size:12px;
+        padding:8px 10px;
+    }
+
+    /* ---------- TABLE ---------- */
+
+    .table-wrapper{
+        overflow-x:auto;
+        -webkit-overflow-scrolling:touch;
+    }
+
+    table{
+        min-width:700px;
+    }
+
+    th{
+        padding:14px 12px;
+        font-size:14px;
+        white-space:nowrap;
+    }
+
+    td{
+        padding:14px 12px;
+        font-size:13px;
+        line-height:1.7;
+        vertical-align:top;
+    }
+
+    /* ---------- COLUMN WIDTH ---------- */
+
+    .col-tt{
+        width:70px;
+    }
+
+    .col-task{
+        min-width:180px;
+    }
+
+    .col-tool{
+        min-width:260px;
+    }
+
+    .col-qty{
+        min-width:100px;
+    }
+
+    /* ---------- TOUCH ---------- */
+
+    tbody tr:active{
+        background-color:#CC9933;
+    }
+
+}

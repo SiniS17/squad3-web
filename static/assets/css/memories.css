@@ -1,0 +1,609 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#edf2f4;
+    color:#222;
+}
+
+/* =========================================
+TOP BAR (identical to hotspot)
+========================================= */
+
+.topbar{
+    background:#19809A;
+    padding:14px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+    position:sticky;
+    top:0;
+    z-index:1000;
+    box-shadow:0 2px 10px rgba(0,0,0,0.15);
+}
+
+.back-btn{
+    text-decoration:none;
+    background:#CC9933;
+    color:white;
+    padding:10px 18px;
+    border-radius:10px;
+    font-weight:bold;
+    white-space:nowrap;
+    transition:0.2s;
+}
+
+.back-btn:hover{
+    opacity:0.9;
+}
+
+.page-title{
+    color:white;
+    font-size:26px;
+    font-weight:bold;
+    text-align:center;
+    flex:1;
+    line-height:1.3;
+}
+
+.logo-area img{
+    height:55px;
+    object-fit:contain;
+}
+
+.mode-btn{
+    background:#CC9933;
+    color:white;
+    border:none;
+    border-radius:10px;
+    padding:10px 18px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.mode-status{
+    font-weight:bold;
+}
+
+.view-mode{
+    color:white;
+    background:#666;
+    padding:8px 12px;
+    border-radius:8px;
+}
+
+.edit-mode{
+    color:white;
+    background:#CC9933;
+    padding:8px 12px;
+    border-radius:8px;
+}
+
+/* =========================================
+POPUP (identical to hotspot)
+========================================= */
+
+.popup-overlay{
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.5);
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+
+.popup-box{
+    background:white;
+    padding:30px;
+    border-radius:16px;
+    text-align:center;
+    width:320px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+
+.popup-box h3{
+    color:#CC9933;
+    margin-bottom:15px;
+}
+
+.popup-box p{
+    margin-bottom:20px;
+}
+
+.popup-box button{
+    background:#19809A;
+    color:white;
+    border:none;
+    padding:10px 20px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+/* =========================================
+MAIN CONTAINER
+========================================= */
+
+.container{
+    max-width:1450px;
+    margin:auto;
+    padding:30px 20px;
+}
+
+/* =========================================
+NEW ALBUM FORM
+========================================= */
+
+.new-album-section{
+    background:white;
+    border-radius:18px;
+    padding:22px;
+    margin-bottom:30px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+
+.section-heading{
+    color:#19809A;
+    font-size:18px;
+    margin-bottom:16px;
+}
+
+.new-album-form{
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+}
+
+.album-name-input{
+    flex:1;
+    min-width:240px;
+    padding:12px 16px;
+    border-radius:10px;
+    border:1px solid #ccc;
+    font-size:15px;
+    outline:none;
+    transition:0.2s;
+}
+
+.album-name-input:focus{
+    border-color:#19809A;
+}
+
+.create-album-btn{
+    padding:12px 24px;
+    background:#19809A;
+    color:white;
+    border:none;
+    border-radius:10px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.2s;
+    white-space:nowrap;
+}
+
+.create-album-btn:hover{
+    background:#15687d;
+}
+
+/* =========================================
+ALBUM CARD
+========================================= */
+
+.album-card{
+    background:white;
+    border-radius:20px;
+    overflow:hidden;
+    margin-bottom:35px;
+    box-shadow:0 6px 16px rgba(0,0,0,0.08);
+}
+
+/* =========================================
+ALBUM HEADER
+========================================= */
+
+.album-header{
+    background:#19809A;
+    color:white;
+    padding:18px 22px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+.album-left{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.album-icon{
+    font-size:28px;
+}
+
+.album-title{
+    font-size:20px;
+    font-weight:bold;
+}
+
+.album-meta{
+    font-size:13px;
+    opacity:0.8;
+    margin-top:3px;
+}
+
+.album-actions{
+    display:flex;
+    gap:10px;
+    align-items:center;
+}
+
+.upload-photos-btn{
+    background:#CC9933;
+    color:white;
+    padding:10px 18px;
+    border-radius:10px;
+    font-weight:bold;
+    cursor:pointer;
+    font-size:14px;
+    transition:0.2s;
+    white-space:nowrap;
+}
+
+.upload-photos-btn:hover{
+    opacity:0.9;
+}
+
+.delete-album-btn{
+    background:rgba(255,255,255,0.15);
+    color:white;
+    border:none;
+    padding:10px 14px;
+    border-radius:10px;
+    font-size:16px;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.delete-album-btn:hover{
+    background:rgba(255,80,80,0.4);
+}
+
+/* =========================================
+PHOTO GRID
+========================================= */
+
+.photo-grid{
+    padding:20px;
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));
+    gap:14px;
+}
+
+.photo-item{
+    position:relative;
+    aspect-ratio:1 / 1;
+    border-radius:14px;
+    overflow:hidden;
+    cursor:pointer;
+    background:#f0f0f0;
+}
+
+.photo-item img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transition:transform 0.3s ease;
+    display:block;
+}
+
+.photo-item:hover img{
+    transform:scale(1.05);
+}
+
+.delete-photo-btn{
+    position:absolute;
+    top:8px;
+    right:8px;
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    border:none;
+    background:rgba(0,0,0,0.55);
+    color:white;
+    font-size:14px;
+    cursor:pointer;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    transition:0.2s;
+    z-index:5;
+}
+
+.photo-item:hover .delete-photo-btn{
+    display:flex;
+}
+
+.delete-photo-btn:hover{
+    background:rgba(220,50,50,0.85);
+}
+
+/* =========================================
+EMPTY STATES
+========================================= */
+
+.empty-album{
+    grid-column:1 / -1;
+    text-align:center;
+    padding:40px;
+    color:#aaa;
+    font-size:15px;
+}
+
+.no-albums{
+    text-align:center;
+    padding:80px 20px;
+    color:#aaa;
+}
+
+.no-albums-icon{
+    font-size:64px;
+    margin-bottom:16px;
+}
+
+.no-albums-text{
+    font-size:17px;
+}
+
+/* =========================================
+LIGHTBOX
+========================================= */
+
+.lightbox-overlay{
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.92);
+    z-index:9999;
+    justify-content:center;
+    align-items:center;
+}
+
+.lightbox-content{
+    max-width:90vw;
+    max-height:90vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:12px;
+}
+
+.lightbox-content img{
+    max-width:90vw;
+    max-height:82vh;
+    object-fit:contain;
+    border-radius:10px;
+    box-shadow:0 8px 40px rgba(0,0,0,0.5);
+}
+
+.lightbox-caption{
+    color:rgba(255,255,255,0.7);
+    font-size:14px;
+}
+
+.lightbox-close{
+    position:fixed;
+    top:20px;
+    right:24px;
+    background:rgba(255,255,255,0.15);
+    color:white;
+    border:none;
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    font-size:20px;
+    cursor:pointer;
+    transition:0.2s;
+    z-index:10000;
+}
+
+.lightbox-close:hover{
+    background:rgba(255,255,255,0.3);
+}
+
+.lightbox-prev,
+.lightbox-next{
+    position:fixed;
+    top:50%;
+    transform:translateY(-50%);
+    background:rgba(255,255,255,0.12);
+    color:white;
+    border:none;
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    font-size:30px;
+    cursor:pointer;
+    transition:0.2s;
+    z-index:10000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.lightbox-prev{ left:16px; }
+.lightbox-next{ right:16px; }
+
+.lightbox-prev:hover,
+.lightbox-next:hover{
+    background:rgba(255,255,255,0.25);
+}
+
+/* =========================================
+UPLOAD TOAST
+========================================= */
+
+.upload-toast{
+    display:none;
+    position:fixed;
+    bottom:24px;
+    left:50%;
+    transform:translateX(-50%);
+    background:white;
+    border-radius:12px;
+    padding:16px 24px;
+    box-shadow:0 8px 24px rgba(0,0,0,0.18);
+    z-index:9998;
+    min-width:280px;
+    text-align:center;
+}
+
+.toast-bar{
+    height:4px;
+    background:#19809A;
+    border-radius:4px;
+    width:0%;
+    transition:width 0.3s;
+    margin-bottom:10px;
+}
+
+.toast-text{
+    font-size:14px;
+    color:#444;
+    font-weight:bold;
+}
+
+/* =========================================
+TABLET
+========================================= */
+
+@media(max-width:1100px){
+
+    .page-title{
+        font-size:22px;
+    }
+
+    .photo-grid{
+        grid-template-columns:repeat(auto-fill, minmax(180px, 1fr));
+    }
+}
+
+/* =========================================
+MOBILE
+========================================= */
+
+@media(max-width:768px){
+
+    /* ---------- TOP BAR ----------
+       Row 1 → back-btn | logo | login/logout + mode-status
+       Row 2 → page title (full width)
+    ---------------------------------------- */
+
+    .topbar{
+        padding:10px 14px;
+        gap:0;
+        flex-wrap:wrap;
+    }
+
+    .back-btn{
+        order:1;
+        padding:8px 12px;
+        font-size:13px;
+    }
+
+    .logo-area{
+        order:2;
+        flex:1;
+        display:flex;
+        justify-content:center;
+    }
+
+    .logo-area img{
+        height:36px;
+    }
+
+    .mode-area{
+        order:3;
+    }
+
+    .mode-btn{
+        padding:8px 12px;
+        font-size:13px;
+    }
+
+    .mode-status{
+        order:4;
+    }
+
+    .view-mode,
+    .edit-mode{
+        padding:6px 10px;
+        font-size:12px;
+    }
+
+    .page-title{
+        order:5;
+        width:100%;
+        font-size:13px;
+        line-height:1.4;
+        text-align:center;
+        padding-top:8px;
+        border-top:1px solid rgba(255,255,255,0.2);
+        margin-top:8px;
+    }
+
+    .container{
+        padding:18px 12px;
+    }
+
+    .photo-grid{
+        grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));
+        gap:10px;
+        padding:14px;
+    }
+
+    .album-header{
+        padding:14px;
+    }
+
+    .album-title{
+        font-size:16px;
+    }
+
+    .lightbox-prev{ left:6px; }
+    .lightbox-next{ right:6px; }
+
+    .delete-photo-btn{
+        display:flex;
+    }
+}
+
+.photo-item video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.video-badge{
+    position:absolute;
+    bottom:10px;
+    left:10px;
+    background:rgba(0,0,0,0.55);
+    color:white;
+    font-size:18px;
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    pointer-events:none;
+}

@@ -1,0 +1,119 @@
+/*
+ * Squad 3 theme overrides
+ * Replaces teal/gold (Squad 1) with navy-blue/orange (Squad 3 / Airbus A320-321)
+ */
+
+:root {
+    --accent:      #1a4fa8;
+    --accent-dark: #0e3a8a;
+    --accent-light:#3b72d4;
+    --gold:        #e07020;
+}
+
+/* ── Sidebar background gradient ── */
+#sidebar {
+    background: linear-gradient(175deg, #0e3a8a 0%, #1a4fa8 60%, #163d88 100%) !important;
+}
+
+/* ── Intro section gradient (hero) ── */
+section#intro.wrapper.style1 {
+    background-color: #1a4fa8 !important;
+}
+
+/* ── Link underline color ── */
+#sidebar a {
+    border-bottom-color: rgba(255,255,255,0.2) !important;
+}
+#sidebar a:hover {
+    color: #fbbf24 !important;
+    border-bottom-color: rgba(251,191,36,0.5) !important;
+}
+
+/* ── Scrolly button accent ── */
+.button.scrolly,
+.button:not(.icon):not(.alt) {
+    background-color: var(--accent) !important;
+    border-color: var(--accent) !important;
+}
+.button.scrolly:hover,
+.button:not(.icon):not(.alt):hover {
+    background-color: var(--accent-dark) !important;
+    border-color: var(--accent-dark) !important;
+}
+
+/* ── Spotlight section accent bar ── */
+.wrapper.style2 section::before {
+    background-color: var(--accent) !important;
+}
+
+/* ── Footer ── */
+#footer.wrapper.style1-alt {
+    background-color: #0e3a8a !important;
+}
+
+/* ── Topbar (shared across sub-pages) ── */
+.topbar {
+    background: linear-gradient(135deg, #1a4fa8, #0e3a8a) !important;
+}
+
+/* ── Rules page header ── */
+.header h1 {
+    color: var(--accent) !important;
+}
+.rule-card.active .rule-header {
+    background: var(--accent) !important;
+    color: #fff !important;
+}
+.rule-card.active .arrow {
+    color: #fff !important;
+}
+
+/* ── Tools page table header ── */
+.table-header {
+    background: linear-gradient(135deg, #1a4fa8, #0e3a8a) !important;
+}
+thead tr th {
+    background: #1a4fa8 !important;
+}
+tbody tr:hover {
+    background: #eef3fb !important;
+}
+
+/* ── Hotspot topbar text ── */
+.topbar .page-title,
+.topbar .back-btn,
+.topbar .mode-btn {
+    color: #fff !important;
+}
+
+/* ── Hotspot card header ── */
+.hotspot-card .card-header {
+    background: linear-gradient(135deg, #1a4fa8 0%, #0e3a8a 100%) !important;
+}
+
+/* ── Memories topbar ── */
+.create-album-btn {
+    background: var(--accent) !important;
+    border-color: var(--accent) !important;
+}
+.create-album-btn:hover {
+    background: var(--accent-dark) !important;
+}
+.upload-photos-btn {
+    background: var(--accent) !important;
+    border-color: var(--accent) !important;
+}
+.upload-photos-btn:hover {
+    background: var(--accent-dark) !important;
+}
+
+/* ── Footer across all pages ── */
+.footer {
+    background: #0e3a8a !important;
+    color: rgba(255,255,255,0.7) !important;
+}
+
+/* ── Mobile menu toggle ── */
+#mobile-menu-toggle span {
+    background: #fff !important;
+}
