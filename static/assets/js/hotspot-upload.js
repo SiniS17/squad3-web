@@ -76,7 +76,13 @@ document.addEventListener('DOMContentLoaded', function(){
                         );
                     }
 
+                    // Show preview immediately using base64
                     image.src = e.target.result;
+                    image.style.display = '';
+
+                    // Hide "no image" message
+                    const noMsg = placeholder.querySelector('.no-image-msg');
+                    if(noMsg) noMsg.style.display = 'none';
 
                     uploadBtn.style.display = 'none';
                     editBtn.style.display = 'block';
@@ -118,18 +124,19 @@ document.addEventListener('DOMContentLoaded', function(){
 
                     if(result.success){
 
-                        alert(
-                            'Image uploaded successfully'
-                        );
+                        // Switch img src to the saved static URL
+                        const savedImg = placeholder.querySelector('img');
+                        if(savedImg && result.url){
+                            savedImg.src = result.url;
+                        }
 
                     }else{
 
-                        alert(
-                            'Upload failed'
-                        );
+                        alert('Upload failed: ' + (result.error || 'Unknown error'));
                     }
 
-                });
+                })
+                .catch(() => alert('Upload failed — network error'));
 
                 reader.readAsDataURL(file);
 

@@ -74,12 +74,13 @@ section#intro.wrapper.style1 {
 }
 thead tr th {
     background: #1a4fa8 !important;
+    color: rgba(255,255,255,0.88) !important;
 }
 tbody tr:hover {
     background: #eef3fb !important;
 }
 
-/* ── Hotspot topbar text ── */
+/* ── Topbar text ── */
 .topbar .page-title,
 .topbar .back-btn,
 .topbar .mode-btn {
@@ -116,4 +117,91 @@ tbody tr:hover {
 /* ── Mobile menu toggle ── */
 #mobile-menu-toggle span {
     background: #fff !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SUB-PAGE NAV  (replaces the old "Trang chủ" back button)
+═══════════════════════════════════════════════════════════ */
+
+.sub-nav {
+    position: relative;
+    z-index: 200;
+    flex-shrink: 0;
+    /* padding-bottom bridges the hover zone from button to dropdown */
+    padding-bottom: 10px;
+}
+
+.sub-nav-toggle {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    letter-spacing: 0.04em;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.sub-nav:hover .sub-nav-toggle,
+.sub-nav-toggle:focus {
+    background: rgba(255,255,255,0.25);
+    outline: none;
+}
+
+.sub-nav-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #0b2d6e;
+    border-radius: 10px;
+    box-shadow: 0 10px 32px rgba(0,0,0,0.35);
+    overflow: hidden;
+    min-width: 210px;
+    border: 1px solid rgba(255,255,255,0.12);
+}
+
+.sub-nav:hover .sub-nav-menu {
+    display: block;
+}
+
+.sub-nav-menu a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 18px;
+    color: rgba(255,255,255,0.82);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    transition: background 0.15s, color 0.15s;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+.sub-nav-menu a:last-child {
+    border-bottom: none;
+}
+
+.sub-nav-menu a:hover {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+}
+
+.sub-nav-menu a.current {
+    background: rgba(255,255,255,0.12);
+    color: #fbbf24;
+}
+
+.sub-nav-menu a .nav-icon {
+    font-size: 1rem;
+    width: 20px;
+    text-align: center;
+    flex-shrink: 0;
 }
