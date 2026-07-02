@@ -249,22 +249,22 @@ def fetch_hotspot_from_sheets():
 # ─────────────────────────────────────────────────────────────────────────────
 
 MOCK_TOOLS_DATA = [
-    {"task": "Thay lốp NLG / MLG",           "part_number": "—", "tool": "Cờ lê tròng 2-1/4\"",      "so_luong": "1"},
-    {"task": "Thay lốp NLG / MLG",           "part_number": "—", "tool": "Torque wrench 250 ft·lb",  "so_luong": "1"},
-    {"task": "Thay lốp NLG / MLG",           "part_number": "—", "tool": "Breaker bar 3/4\"",        "so_luong": "1"},
-    {"task": "Thay phanh (brake unit) MLG",   "part_number": "—", "tool": "Socket 1-1/4\"",           "so_luong": "1"},
-    {"task": "Thay phanh (brake unit) MLG",   "part_number": "—", "tool": "Torque wrench 100 ft·lb", "so_luong": "1"},
-    {"task": "Thay EDP (Engine Driven Pump)", "part_number": "—", "tool": "Cờ lê miệng 1-1/8\"",    "so_luong": "1"},
-    {"task": "Thay EDP (Engine Driven Pump)", "part_number": "—", "tool": "Càng cua 1-5/8\"",        "so_luong": "1"},
-    {"task": "Thay IDG",                      "part_number": "—", "tool": "Allen key 5/32\"",         "so_luong": "1"},
-    {"task": "Thay IDG",                      "part_number": "—", "tool": "Cờ lê 1-1/4\"",           "so_luong": "1"},
-    {"task": "Thay IDG",                      "part_number": "—", "tool": "Thanh đồng",               "so_luong": "1"},
-    {"task": "Kiểm tra / thay igniter plug",  "part_number": "—", "tool": "Socket dài 13/16\"",       "so_luong": "1"},
-    {"task": "Kiểm tra / thay igniter plug",  "part_number": "—", "tool": "Torque wrench 30 ft·lb",  "so_luong": "1"},
-    {"task": "Thay fuel filter element",      "part_number": "—", "tool": "Cờ lê dây (strap wrench)","so_luong": "1"},
-    {"task": "Thay rudder PCU",               "part_number": "—", "tool": "Socket 1-1/8\"",           "so_luong": "2"},
-    {"task": "Thay elevator PCU",             "part_number": "—", "tool": "Deep socket 1-1/8\"",      "so_luong": "1"},
-    {"task": "Đo Dimension A NLG & MLG",      "part_number": "—", "tool": "Thước dây (steel tape)",   "so_luong": "1"},
+    {"task": "Thay lốp NLG / MLG",           "part_number": "—", "tool": "Cờ lê tròng 2-1/4\"",      "so_luong": "1", "engine": "",      "zone": "100"},
+    {"task": "Thay lốp NLG / MLG",           "part_number": "—", "tool": "Torque wrench 250 ft·lb",  "so_luong": "1", "engine": "",      "zone": "100"},
+    {"task": "Thay lốp NLG / MLG",           "part_number": "—", "tool": "Breaker bar 3/4\"",        "so_luong": "1", "engine": "",      "zone": "100"},
+    {"task": "Thay phanh (brake unit) MLG",   "part_number": "—", "tool": "Socket 1-1/4\"",           "so_luong": "1", "engine": "",      "zone": "100"},
+    {"task": "Thay phanh (brake unit) MLG",   "part_number": "—", "tool": "Torque wrench 100 ft·lb", "so_luong": "1", "engine": "",      "zone": "100"},
+    {"task": "Thay EDP (Engine Driven Pump)", "part_number": "—", "tool": "Cờ lê miệng 1-1/8\"",    "so_luong": "1", "engine": "CFM56", "zone": "400"},
+    {"task": "Thay EDP (Engine Driven Pump)", "part_number": "—", "tool": "Càng cua 1-5/8\"",        "so_luong": "1", "engine": "CFM56", "zone": "400"},
+    {"task": "Thay IDG",                      "part_number": "—", "tool": "Allen key 5/32\"",         "so_luong": "1", "engine": "IAE",   "zone": "400"},
+    {"task": "Thay IDG",                      "part_number": "—", "tool": "Cờ lê 1-1/4\"",           "so_luong": "1", "engine": "IAE",   "zone": "400"},
+    {"task": "Thay IDG",                      "part_number": "—", "tool": "Thanh đồng",               "so_luong": "1", "engine": "IAE",   "zone": "400"},
+    {"task": "Kiểm tra / thay igniter plug",  "part_number": "—", "tool": "Socket dài 13/16\"",       "so_luong": "1", "engine": "CFM56", "zone": "400"},
+    {"task": "Kiểm tra / thay igniter plug",  "part_number": "—", "tool": "Torque wrench 30 ft·lb",  "so_luong": "1", "engine": "CFM56", "zone": "400"},
+    {"task": "Thay fuel filter element",      "part_number": "—", "tool": "Cờ lê dây (strap wrench)","so_luong": "1", "engine": "CFM56", "zone": "400"},
+    {"task": "Thay rudder PCU",               "part_number": "—", "tool": "Socket 1-1/8\"",           "so_luong": "2", "engine": "",      "zone": "500"},
+    {"task": "Thay elevator PCU",             "part_number": "—", "tool": "Deep socket 1-1/8\"",      "so_luong": "1", "engine": "",      "zone": "500"},
+    {"task": "Đo Dimension A NLG & MLG",      "part_number": "—", "tool": "Thước dây (steel tape)",   "so_luong": "1", "engine": "",      "zone": "100"},
 ]
 
 
@@ -281,7 +281,7 @@ def fetch_tools_from_sheets():
         svc      = _sheets_service()
         result   = svc.spreadsheets().values().get(
             spreadsheetId=sheet_id,
-            range=f"'{tab}'!A1:D"
+            range=f"'{tab}'!A1:F"
         ).execute()
         rows = result.get("values", [])
         if not rows:
@@ -289,13 +289,15 @@ def fetch_tools_from_sheets():
             return [], None
         data = []
         for row in rows[1:]:
-            while len(row) < 4:
+            while len(row) < 6:
                 row.append("")
             data.append({
                 "task":        row[0].strip(),
                 "part_number": row[1].strip(),
                 "tool":        row[2].strip(),
                 "so_luong":    row[3].strip(),
+                "engine":      row[4].strip(),
+                "zone":        row[5].strip(),
             })
         _cache_set("tools", data, None)
         return data, None
@@ -309,7 +311,8 @@ def fetch_tools_from_sheets():
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    tab_images = cfg("tab_images", {})
+    return render_template("index.html", tab_images=tab_images)
 
 
 @app.route("/login", methods=["POST"])
@@ -460,14 +463,79 @@ def a320_tools():
     using_mock  = data is None
     if using_mock:
         data = MOCK_TOOLS_DATA
-    tasks = sorted(set(r["task"] for r in data if r["task"]))
+    tasks   = sorted(set(r["task"]   for r in data if r.get("task")))
+    engines = sorted(set(r["engine"] for r in data if r.get("engine")))
+    zones   = sorted(set(r["zone"]   for r in data if r.get("zone")))
+    sheet_id  = os.environ.get("GOOGLE_SHEET_ID", "")
+    sheet_url = f"https://docs.google.com/spreadsheets/d/{sheet_id}" if sheet_id else "#"
     return render_template(
         "a320_tools.html",
         tools_data=data,
         tasks=tasks,
+        engines=engines,
+        zones=zones,
         using_mock=using_mock,
         google_error=error,
         tools_cfg=tools_cfg,
+        sheet_url=sheet_url,
+    )
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Links
+# ─────────────────────────────────────────────────────────────────────────────
+
+MOCK_LINKS_DATA = [
+    {"ten": "AMOS",                  "link": "https://amos.vna.vn"},
+    {"ten": "MMS",                   "link": "https://mms.vna.vn"},
+    {"ten": "VAECO Intranet",        "link": "https://intranet.vaeco.vn"},
+    {"ten": "Airbus AMM A320",       "link": "https://www.airbus.com"},
+    {"ten": "CFM Tech Data",         "link": "https://cfmaeroengines.com"},
+    {"ten": "IAE Tech Data",         "link": "https://www.iae.com"},
+]
+
+
+def fetch_links_from_sheets():
+    cached_data, cached_err = _cache_get("links")
+    if cached_data is not None or cached_err is not None:
+        return (None if cached_err else cached_data), cached_err
+    try:
+        sheet_id = os.environ.get("GOOGLE_SHEET_ID")
+        tab      = cfg("links_tab", "Links")
+        svc      = _sheets_service()
+        result   = svc.spreadsheets().values().get(
+            spreadsheetId=sheet_id,
+            range=f"'{tab}'!A1:B"
+        ).execute()
+        rows = result.get("values", [])
+        if not rows:
+            _cache_set("links", [], None)
+            return [], None
+        data = []
+        for row in rows[1:]:
+            while len(row) < 2:
+                row.append("")
+            ten  = row[0].strip()
+            link = row[1].strip()
+            if ten or link:
+                data.append({"ten": ten, "link": link})
+        _cache_set("links", data, None)
+        return data, None
+    except Exception as e:
+        return None, str(e)
+
+
+@app.route("/links")
+def links_page():
+    data, error = fetch_links_from_sheets()
+    using_mock  = data is None
+    if using_mock:
+        data = MOCK_LINKS_DATA
+    return render_template(
+        "links.html",
+        links_data=data,
+        using_mock=using_mock,
+        google_error=error,
     )
 
 

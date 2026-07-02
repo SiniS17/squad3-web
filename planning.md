@@ -7,9 +7,7 @@ Phát triển theo từng giai đoạn (phase), mỗi phase có thể hoàn thà
 
 ---
 
-## Phase 1 – Rebranding + Skeleton Hot Spots (Google Sheets) ✅ ĐANG LÀM
-**Mục tiêu:** Website chạy được, mang nhận diện Đội 3, trang Hot Spots có cấu trúc đúng nhưng
-chưa cần kết nối Google thật.
+## Phase 1 – Rebranding + Skeleton Hot Spots (Google Sheets) ✅ HOÀN THÀNH
 
 ### Công việc:
 - [x] Đổi tất cả "đội 1" → "Đội 3" trong toàn bộ template
@@ -24,47 +22,37 @@ chưa cần kết nối Google thật.
 - [x] Cập nhật Rules, Memories, Index với tên Đội 3
 - [x] Tạo file `planning.md`
 
-### Kết quả mong đợi:
-Website chạy, trang Hot Spots hiển thị dữ liệu mẫu (mock), sẵn sàng kết nối Google ở Phase 2.
-
 ---
 
-## Phase 2 – Kết nối Google Sheets + Google Drive thật
-**Mục tiêu:** Hot Spots đọc dữ liệu thật từ Google Sheets, ảnh thật từ Google Drive.
+## Phase 2 – Kết nối Google Sheets + Google Drive thật ✅ HOÀN THÀNH
 
 ### Công việc:
-- [ ] Tạo Google Service Account, tải file credentials JSON
-- [ ] Lưu credentials vào Replit Secrets (biến môi trường)
-- [ ] Cấu hình: `GOOGLE_SHEET_ID`, `GOOGLE_DRIVE_FOLDER_ID` trong Secrets
-- [ ] Backend `fetch_hotspot_from_sheets()`:
+- [x] Tạo Google Service Account, tải file credentials JSON
+- [x] Lưu credentials vào Replit Secrets (biến môi trường)
+- [x] Cấu hình: `GOOGLE_SHEET_ID`, `GOOGLE_DRIVE_FOLDER_ID` trong Secrets
+- [x] Backend `fetch_hotspot_from_sheets()`:
   - Kết nối Google Sheets API, đọc 4 cột: NỘI DUNG, ĐÚNG, SAI, ZONE
   - Cache kết quả 5 phút để tránh quá nhiều API call
-- [ ] Backend `get_drive_image_url(filename)`:
+- [x] Backend `get_drive_image_url(filename)`:
   - Tìm file theo tên trong Google Drive folder
   - Trả về link xem ảnh trực tiếp (hoặc proxy qua server)
-- [ ] Test với dữ liệu thật từ sheet
-- [ ] Xử lý lỗi khi Sheet trống, ảnh không tìm thấy
-
-### Yêu cầu từ người dùng trước khi bắt đầu:
-- Cung cấp Google Sheet ID (lấy từ URL của sheet)
-- Cung cấp Google Drive Folder ID (chứa ảnh ĐÚNG/SAI)
-- Chia sẻ Sheet và Folder cho Service Account email
+- [x] Test với dữ liệu thật từ sheet
+- [x] Xử lý lỗi khi Sheet trống, ảnh không tìm thấy
 
 ---
 
-## Phase 3 – Nội dung trang Tools (A320/321)
-**Mục tiêu:** Thay thế toàn bộ danh sách tool B787 bằng tool thực tế cho A320/321.
+## Phase 3 – Nội dung trang Tools (A320/321) ✅ HOÀN THÀNH
 
 ### Công việc:
-- [ ] Thu thập danh sách tool lẻ tàu A320/321 từ đội
-- [ ] Cập nhật bảng "Danh mục tool lẻ" trong `a320_tools.html`
-- [ ] Thêm bảng "Danh mục tool thay động cơ A320/321" (nếu có)
-- [ ] Cân nhắc: có cần lấy từ Google Sheets không? (giống Hot Spots)
+- [x] Thu thập danh sách tool lẻ tàu A320/321 từ đội
+- [x] Trang Tools kết nối Google Sheets (tab "Tool chuẩn bị"), đọc cột A–F (task, part_number, tool, so_luong, engine, zone)
+- [x] Giao diện lọc nâng cao: tìm kiếm task có autocomplete, bộ lọc engine/zone qua panel riêng
+- [x] Card hiển thị tag engine và zone, bố cục 2 cột desktop
+- [x] "Google Sheets ↗" là link bấm được dẫn đến sheet thật
 
 ---
 
 ## Phase 4 – Quy định & Album Đội 3
-**Mục tiêu:** Cập nhật nội dung quy định và album ảnh phù hợp Đội 3.
 
 ### Công việc:
 - [ ] Cập nhật nội dung các quy định trong `rules.html` cho Đội 3
@@ -77,14 +65,12 @@ Website chạy, trang Hot Spots hiển thị dữ liệu mẫu (mock), sẵn sà
 
 ---
 
-## Phase 5 – Tối ưu & Hoàn thiện
-**Mục tiêu:** Trau chuốt giao diện, cải thiện trải nghiệm người dùng.
+## Phase 5 – Tính năng mới
 
 ### Công việc:
+- [x] Trang "Các link thông dụng" (`/links`) – lấy dữ liệu từ tab "Links" (cột Tên, Link)
 - [ ] Responsive mobile: kiểm tra và cải thiện hiển thị trên điện thoại
 - [ ] Loading state cho trang Hot Spots (hiển thị spinner khi chờ Google Sheets)
-- [ ] Bộ lọc Hot Spots: lọc theo Zone (dữ liệu động từ sheet)
-- [ ] (Tùy chọn) Thêm tính năng tìm kiếm trong trang Rules
 - [ ] (Tùy chọn) Trang Hot Spots: thêm cột hiển thị ngày cập nhật từ sheet
 - [ ] Deploy lên production (Replit Deployments)
 - [ ] Đặt custom domain (nếu cần)
@@ -93,7 +79,7 @@ Website chạy, trang Hot Spots hiển thị dữ liệu mẫu (mock), sẵn sà
 
 ## Ghi chú kỹ thuật
 
-### Cấu trúc Google Sheet (4 cột bắt buộc):
+### Cấu trúc Google Sheet (4 cột bắt buộc – tab Hotspot):
 | NỘI DUNG CẦN CHÚ Ý KIỂM TRA | ĐÚNG | SAI | ZONE |
 |-------------------------------|------|-----|------|
 | Kiểm tra... | ten_anh_dung.jpg | ten_anh_sai.jpg | 100 |
@@ -102,7 +88,13 @@ Website chạy, trang Hot Spots hiển thị dữ liệu mẫu (mock), sẵn sà
 - Cột **SAI**: tên file ảnh "Defect Condition" trong Google Drive folder
 - Cột **ZONE**: mã zone (dùng để lọc)
 
-### Biến môi trường cần thiết (Phase 2):
+### Cấu trúc Google Sheet – tab "Tool chuẩn bị" (6 cột):
+| task | part_number | tool | so_luong | engine | zone |
+
+### Cấu trúc Google Sheet – tab "Links" (2 cột):
+| Tên | Link |
+
+### Biến môi trường cần thiết:
 ```
 GOOGLE_CREDENTIALS_JSON  → nội dung file service account JSON
 GOOGLE_SHEET_ID          → ID của Google Sheet

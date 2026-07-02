@@ -1,12 +1,22 @@
 {
-  "_comment": "Edit this file to change tab/folder names without touching code. Restart the app after saving.",
+  "_comment": "Edit this file to change tab/folder names and images without touching code. Restart the app after saving.",
 
   "hotspot_tab": "Hotspot",
   "tools_tab":   "Tool chuẩn bị",
+  "links_tab":   "Links",
 
   "drive_images_root":    "",
   "drive_hotspot_folder": "Hotspot",
   "drive_album_folder":   "Album đội",
 
-  "google_service_account_email": "squad3@squad-website-501111.iam.gserviceaccount.com"
+  "google_service_account_email": "squad3@squad-website-501111.iam.gserviceaccount.com",
+
+  "_comment_tab_images": "Filenames of tab background images stored in /static/images/. Leave empty string to show icon fallback.",
+  "tab_images": {
+    "memories": "",
+    "hotspot":  "",
+    "tools":    "Tool.jpg",
+    "rules":    "Quy dinh.jpg",
+    "links":    ""
+  }
 }
