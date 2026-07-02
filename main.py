@@ -5,6 +5,15 @@ import datetime
 from flask import Flask, render_template, request, jsonify, redirect, session, Response
 from werkzeug.utils import secure_filename
 
+# Load variables from a local .env file (if present) into os.environ.
+# In production (Replit/Render/etc.) real env vars are already set, so
+# this is a no-op there — it only matters for local development.
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 app = Flask(__name__)
 app.secret_key = "VAECOsquad3_A320"
 
