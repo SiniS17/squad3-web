@@ -368,24 +368,19 @@ def hotspot():
 @app.route("/proxy-drive-image")
 def proxy_drive_image():
     """
-    Proxy a Google Drive image by file_id or filename.
-    For hotspot images: ?filename=xxx  (searches local static/images/B787-hotspots/ first,
-                                        then Google Drive inside Hình ảnh/Hotspot)
-    For direct id:      ?file_id=xxx
+    Serve a Drive image by file_id or filename, streamed directly on
+    each request (in-memory cache only — no disk writes, view-only site).
     """
-    import urllib.request
     import mimetypes
 
-    file_id  = request.args.get("file_id", "")
+    file_id = request.args.get("file_id", "")
     filename = request.args.get("filename", "")
 
-    # ── 1. Check local hotspot image folder first ──────────────────────────────
+    # ── 1. Bundled local images (checked into the repo, not runtime uploads) ──
     if filename and not file_id:
         local_dirs = [
-            os.path.join(os.path.dirname(__file__), "static", "uploads", "hotspot"),
             os.path.join(os.path.dirname(__file__), "static", "images", "B787-hotspots"),
             os.path.join(os.path.dirname(__file__), "static", "images"),
-            os.path.join(os.path.dirname(__file__), "static", "uploads"),
         ]
         for local_dir in local_dirs:
             local_path = os.path.join(local_dir, filename)
@@ -394,73 +389,38 @@ def proxy_drive_image():
                 with open(local_path, "rb") as f:
                     return Response(f.read(), content_type=ct)
 
-    # ── 2. Look up in DRIVE_HOTSPOT_FOLDER_ID directly ────────────────────────
+    # ── 2. Resolve filename → Drive file_id ────────────────────────────────────
     if not file_id and filename:
         file_id = find_hotspot_image_id(filename) or ""
-
     if not file_id:
         return "", 404
 
-    # ── 3. Download via authenticated Drive API and cache locally ──────────────
+    # ── 3. Stream from Drive (in-memory cache only) ────────────────────────────
+    cached, _ = _cache_get(f"img:{file_id}")
+    if cached is not None:
+        data, ct = cached
+        return Response(data, content_type=ct)
+
     try:
-        import io, mimetypes
+        import io
         from googleapiclient.http import MediaIoBaseDownload
 
-        svc    = _drive_service()
-        meta   = svc.files().get(fileId=file_id, fields="mimeType,name").execute()
-        ct     = meta.get("mimeType", "image/jpeg")
-        fname  = meta.get("name", file_id)
+        svc = _drive_service()
+        meta = svc.files().get(fileId=file_id, fields="mimeType").execute()
+        ct = meta.get("mimeType", "image/jpeg")
 
-        # Determine cache path
-        ext        = mimetypes.guess_extension(ct) or ".jpg"
-        cache_name = secure_filename(fname) if fname else (file_id + ext)
-        cache_dir  = os.path.join(os.path.dirname(__file__), "static", "uploads", "hotspot")
-        os.makedirs(cache_dir, exist_ok=True)
-        cache_path = os.path.join(cache_dir, cache_name)
-
-        # Serve from cache if already downloaded
-        if os.path.isfile(cache_path):
-            with open(cache_path, "rb") as f:
-                return Response(f.read(), content_type=ct)
-
-        # Download from Drive and save to cache
         dl_req = svc.files().get_media(fileId=file_id)
-        buf    = io.BytesIO()
-        dl     = MediaIoBaseDownload(buf, dl_req)
-        done   = False
+        buf = io.BytesIO()
+        dl = MediaIoBaseDownload(buf, dl_req)
+        done = False
         while not done:
             _, done = dl.next_chunk()
         data = buf.getvalue()
 
-        with open(cache_path, "wb") as f:
-            f.write(data)
-
+        _cache_set(f"img:{file_id}", (data, ct), None)
         return Response(data, content_type=ct)
     except Exception:
         return "", 404
-
-
-# ── Hotspot image upload ───────────────────────────────────────────────────────
-
-@app.route("/upload-hotspot-image", methods=["POST"])
-def upload_hotspot_image():
-    """Save an uploaded hotspot image locally to static/uploads/hotspot/."""
-    if not session.get("edit_mode"):
-        return jsonify({"success": False, "error": "Not authorised"}), 403
-
-    file = request.files.get("image")
-    if not file or file.filename == "":
-        return jsonify({"success": False, "error": "No file provided"}), 400
-
-    filename = secure_filename(file.filename)
-    upload_dir = os.path.join(os.path.dirname(__file__), "static", "uploads", "hotspot")
-    os.makedirs(upload_dir, exist_ok=True)
-    file.save(os.path.join(upload_dir, filename))
-    return jsonify({
-        "success": True,
-        "url": f"/static/uploads/hotspot/{filename}",
-        "filename": filename,
-    })
 
 
 # ── Tools ─────────────────────────────────────────────────────────────────────
