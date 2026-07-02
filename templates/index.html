@@ -273,8 +273,9 @@
         /* ── Section indicator dots ── */
         .section-dots {
             position: fixed;
-            bottom: 28px; left: 50%; transform: translateX(-50%);
+            bottom: var(--footer-h, 28px); left: 50%; transform: translateX(-50%);
             display: flex; gap: 8px; z-index: 50;
+            transition: bottom 0.2s ease;
         }
         .dot {
             width: 8px; height: 8px; border-radius: 50%;
@@ -291,14 +292,19 @@
         .contact-strip {
             position: fixed;
             bottom: 0; left: 0; right: 0;
-            height: 22px;
+            min-height: 22px;
+            padding: 6px 16px;
             display: flex; align-items: center; justify-content: center;
-            gap: 24px;
-            background: rgba(0,0,0,0.4);
+            flex-wrap: wrap;
+            gap: 6px 24px;
+            background: rgba(0,0,0,0.55);
+            backdrop-filter: blur(4px);
             font-size: 0.65rem;
             color: rgba(255,255,255,0.3);
             letter-spacing: 0.08em;
             text-transform: uppercase;
+            text-align: center;
+            line-height: 1.5;
             z-index: 40;
         }
         .contact-strip a { color: rgba(255,255,255,0.3); text-decoration: none; }
@@ -327,6 +333,15 @@
             .section-panel { padding: 0 20px 0 16px; }
             .topbar-center { display: none; }
             .panel-number { display: none; }
+
+            .contact-strip {
+                flex-direction: column;
+                gap: 2px;
+                padding: 8px 16px calc(8px + env(safe-area-inset-bottom));
+                font-size: 0.58rem;
+                letter-spacing: 0.05em;
+            }
+            .contact-strip span.sep { display: none; }
         }
     </style>
 </head>
@@ -453,11 +468,11 @@
 <div class="section-dots" id="sectionDots"></div>
 
 <!-- Contact strip -->
-<div class="contact-strip">
+<div class="contact-strip" id="contactStrip">
     <span>VAECO – Công ty TNHH MTV Kỹ thuật máy bay</span>
-    <span>·</span>
+    <span class="sep">·</span>
     <span>A75 Đ.Trường Sơn, Tân Sơn Hòa, Tp.HCM</span>
-    <span>·</span>
+    <span class="sep">·</span>
     <span>© 2026 Đội Bảo dưỡng Số 3</span>
 </div>
 
@@ -555,6 +570,17 @@
             else        goTo((current - 1 + panels.length) % panels.length);
         }
     }, { passive: true });
+
+    // ── Keep dots clear of footer, whatever height it wraps to ──
+    const contactStrip = document.getElementById('contactStrip');
+    function syncFooterHeight() {
+        if (!contactStrip) return;
+        const h = contactStrip.getBoundingClientRect().height;
+        document.documentElement.style.setProperty('--footer-h', (h + 12) + 'px');
+    }
+    window.addEventListener('load', syncFooterHeight);
+    window.addEventListener('resize', syncFooterHeight);
+    syncFooterHeight();
 })();
 </script>
 </body>
