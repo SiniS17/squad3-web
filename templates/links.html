@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Các link thông dụng – Đội 3</title>
+    <link rel="icon" type="image/x-icon" href="static/images/favicon.png">
+    <link rel="stylesheet" href="static/assets/css/hotspot.css">
+    <link rel="stylesheet" href="static/assets/css/squad3.css">
+    <style>
+        body { background: #f0f4f8; }
+
+        .page-title {
+            font-size: clamp(0.95rem, 2vw, 1.25rem);
+            font-weight: 800; letter-spacing: 0.04em;
+            color: #fff; text-align: center; flex: 1;
+        }
+
+        .container {
+            max-width: 780px; margin: 0 auto;
+            padding: 28px 16px 60px;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #1a4fa8 0%, #0e3a8a 100%);
+            border-radius: 14px; padding: 24px 28px;
+            margin-bottom: 24px; color: #fff;
+            display: flex; align-items: center; gap: 14px;
+        }
+        .page-header-icon { font-size: 2rem; flex-shrink: 0; }
+        .page-header h1  { font-size: 1.3rem; font-weight: 800; margin: 0 0 3px; }
+        .page-header p   { font-size: 0.85rem; margin: 0; opacity: 0.78; }
+
+        .data-notice {
+            background: #fef9c3; border: 1px solid #fde047;
+            border-radius: 8px; padding: 10px 16px;
+            font-size: 0.83rem; color: #854d0e;
+            display: flex; align-items: center; gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .links-table-wrap {
+            background: #fff; border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+        table.links-table {
+            width: 100%; border-collapse: collapse;
+        }
+
+        table.links-table thead tr {
+            background: linear-gradient(90deg, #1a4fa8, #2563eb);
+        }
+        table.links-table thead th {
+            padding: 12px 18px; text-align: left;
+            font-size: 0.78rem; font-weight: 700;
+            letter-spacing: 0.06em; text-transform: uppercase;
+            color: rgba(255,255,255,0.88);
+        }
+
+        table.links-table tbody tr {
+            border-bottom: 1px solid #f1f5f9;
+            transition: background 0.12s;
+        }
+        table.links-table tbody tr:last-child { border-bottom: none; }
+        table.links-table tbody tr:hover { background: #f8fafc; }
+
+        table.links-table tbody td {
+            padding: 13px 18px; font-size: 0.88rem; color: #1e293b;
+            vertical-align: middle;
+        }
+
+        .link-name { font-weight: 600; }
+
+        .link-href {
+            color: #1a4fa8; text-decoration: none; font-size: 0.85rem;
+            display: inline-flex; align-items: center; gap: 5px;
+        }
+        .link-href:hover { text-decoration: underline; }
+
+        .empty-state {
+            text-align: center; padding: 50px 20px; color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .stats-bar {
+            font-size: 0.82rem; color: #64748b;
+            margin-bottom: 14px; padding: 0 2px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="topbar">
+        <nav class="sub-nav">
+            <button class="sub-nav-toggle">☰&nbsp; Điều hướng</button>
+            <div class="sub-nav-menu">
+                <a href="/"><span class="nav-icon">🏠</span> Trang chủ</a>
+                <a href="/memories"><span class="nav-icon">📸</span> Album Đội 3</a>
+                <a href="/hotspot"><span class="nav-icon">✈</span> Hot Spots</a>
+                <a href="/tools"><span class="nav-icon">🔧</span> Danh mục Tool</a>
+                <a href="/rules"><span class="nav-icon">📋</span> Quy định</a>
+                <a href="/links" class="current"><span class="nav-icon">🔗</span> Các link</a>
+            </div>
+        </nav>
+
+        <div class="page-title">CÁC LINK THÔNG DỤNG</div>
+
+        <div class="logo-area">
+            <img src="static/images/vaeco-logo.png" alt="VAECO Logo">
+        </div>
+    </div>
+
+    <div class="container">
+
+        <div class="page-header">
+            <div class="page-header-icon">🔗</div>
+            <div>
+                <h1>Các link thông dụng</h1>
+                <p>Tổng hợp đường dẫn hay dùng trong công việc – Đội Bảo dưỡng Số 3</p>
+            </div>
+        </div>
+
+        {% if using_mock %}
+        <div class="data-notice">
+            <span>⚠</span>
+            <span>Đang hiển thị <strong>dữ liệu mẫu</strong>. Dữ liệu thật sẽ lấy từ tab "Links" trong Google Sheets.
+            {% if google_error %}({{ google_error }}){% endif %}
+            </span>
+        </div>
+        {% endif %}
+
+        <div class="stats-bar">{{ links_data | length }} link</div>
+
+        {% if links_data %}
+        <div class="links-table-wrap">
+            <table class="links-table">
+                <thead>
+                    <tr>
+                        <th style="width:40%">Tên</th>
+                        <th>Link</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in links_data %}
+                    <tr>
+                        <td class="link-name">{{ item.ten }}</td>
+                        <td>
+                            <a class="link-href" href="{{ item.link }}" target="_blank" rel="noopener">
+                                {{ item.link }} ↗
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <p>🔗 Chưa có link nào. Thêm dữ liệu vào tab "Links" trong Google Sheets.</p>
+        </div>
+        {% endif %}
+
+    </div>
+
+</body>
+</html>

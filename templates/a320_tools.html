@@ -155,6 +155,76 @@
             border: 1px solid #c7d9f5;
         }
 
+        /* ── Engine / Zone tags on card header ── */
+        .engine-tag {
+            padding: 3px 10px; border-radius: 20px;
+            font-size: 0.72rem; font-weight: 700;
+            background: rgba(251,191,36,0.25); color: #fde68a;
+            white-space: nowrap; border: 1px solid rgba(251,191,36,0.35);
+        }
+        .zone-tag-card {
+            padding: 3px 10px; border-radius: 20px;
+            font-size: 0.72rem; font-weight: 600;
+            background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.75);
+            white-space: nowrap;
+        }
+
+        /* ── Autocomplete task search ── */
+        .autocomplete-wrap { position: relative; }
+        .task-search-input {
+            padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px;
+            font-size: 0.85rem; background: #fff; width: 240px; color: #1e293b;
+        }
+        .task-search-input:focus { outline: none; border-color: #1a4fa8; box-shadow: 0 0 0 2px rgba(26,79,168,0.15); }
+        .autocomplete-dropdown {
+            display: none;
+            position: absolute; top: calc(100% + 2px); left: 0;
+            background: #fff; border: 1px solid #e2e8f0; border-radius: 8px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+            z-index: 500; min-width: 260px; max-height: 240px; overflow-y: auto;
+        }
+        .ac-item {
+            padding: 9px 14px; font-size: 0.85rem; color: #1e293b;
+            cursor: pointer; border-bottom: 1px solid #f1f5f9;
+            transition: background 0.1s;
+        }
+        .ac-item:last-child { border-bottom: none; }
+        .ac-item:hover { background: #eef3fb; color: #1a4fa8; }
+        .ac-item mark { background: none; color: #1a4fa8; font-weight: 700; }
+
+        /* ── Filter panel button + dropdown ── */
+        .filter-panel-wrap { position: relative; }
+        .filter-panel-btn {
+            padding: 7px 14px; background: #1a4fa8; color: #fff;
+            border: none; border-radius: 6px; cursor: pointer;
+            font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 6px;
+            transition: background 0.2s; white-space: nowrap;
+        }
+        .filter-panel-btn:hover { background: #0e3a8a; }
+        .filter-panel-btn.has-filter { background: #e07020; }
+        .filter-panel-btn.has-filter:hover { background: #c05e10; }
+        .filter-dot {
+            width: 7px; height: 7px; border-radius: 50%;
+            background: #fbbf24; display: none; flex-shrink: 0;
+        }
+        .filter-dot.visible { display: inline-block; }
+        .filter-panel {
+            display: none;
+            position: absolute; top: calc(100% + 6px); left: 0;
+            background: #fff; border: 1px solid #e2e8f0; border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.14);
+            z-index: 400; min-width: 220px; padding: 14px;
+        }
+        .filter-panel.open { display: block; }
+        .filter-panel-row { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+        .filter-panel-row:last-child { margin-bottom: 0; }
+        .filter-panel-row label { font-size: 0.72rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; }
+        .filter-panel-row select {
+            padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px;
+            font-size: 0.85rem; background: #fff; color: #1e293b;
+        }
+        .filter-panel-row select:focus { outline: none; border-color: #1a4fa8; }
+
         /* ── No results ── */
         .no-results {
             text-align: center; padding: 60px 20px; color: #94a3b8;
@@ -175,6 +245,7 @@
                 <a href="/hotspot"><span class="nav-icon">✈</span> Hot Spots</a>
                 <a href="/tools" class="current"><span class="nav-icon">🔧</span> Danh mục Tool</a>
                 <a href="/rules"><span class="nav-icon">📋</span> Quy định</a>
+                <a href="/links"><span class="nav-icon">🔗</span> Các link</a>
             </div>
         </nav>
         <div class="page-title">DANH MỤC TOOL LẺ TÀU A320/321</div>
@@ -192,37 +263,79 @@
             {% if google_error %}({{ google_error }}){% endif %}
         </span>
     </div>
-    {% else %}
-    <div class="data-notice live">
-        <span>✅</span>
-        <span>Dữ liệu từ <strong>Google Sheets</strong> – {{ tools_data | length }} dòng / {{ tasks | length }} công việc</span>
-    </div>
     {% endif %}
 
     <!-- FILTER SECTION -->
     <div class="filter-section">
+
+        <!-- Task autocomplete search -->
         <div class="filter-box">
             <label>Công việc (Task)</label>
-            <select id="taskFilter">
-                <option value="ALL">Tất cả</option>
-                {% for t in tasks %}
-                <option value="{{ t }}">{{ t }}</option>
-                {% endfor %}
-            </select>
+            <div class="autocomplete-wrap">
+                <input type="text" id="taskSearch" class="task-search-input"
+                       placeholder="Tìm tên công việc..." autocomplete="off">
+                <div class="autocomplete-dropdown" id="taskDropdown"></div>
+            </div>
         </div>
+
+        <!-- Tool / P/N keyword -->
         <div class="filter-box">
             <label>Tìm kiếm tool / P/N</label>
             <input type="text" id="searchInput" placeholder="Nhập từ khóa...">
         </div>
-        <button class="search-btn" id="searchBtn">🔍 Lọc</button>
-        <button class="reset-btn"  id="resetBtn">✕ Xóa lọc</button>
+
+        <!-- Filter panel button (engine + zone) -->
+        <div class="filter-box">
+            <label>&nbsp;</label>
+            <div class="filter-panel-wrap">
+                <button class="filter-panel-btn" id="filterPanelBtn">
+                    ⚙ Bộ lọc <span class="filter-dot" id="filterDot"></span>
+                </button>
+                <div class="filter-panel" id="filterPanel">
+                    <div class="filter-panel-row">
+                        <label>Động cơ</label>
+                        <select id="engineFilter">
+                            <option value="">Tất cả</option>
+                            {% for e in engines %}
+                            <option value="{{ e }}">{{ e }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-panel-row">
+                        <label>Zone</label>
+                        <select id="zoneFilter">
+                            <option value="">Tất cả</option>
+                            {% for z in zones %}
+                            <option value="{{ z }}">Zone {{ z }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reset -->
+        <div class="filter-box">
+            <label>&nbsp;</label>
+            <button class="reset-btn" id="resetBtn">✕ Xóa lọc</button>
+        </div>
+
     </div>
 
     <!-- STATS -->
     <div class="stats-bar">
         <span>Hiển thị: <strong id="visibleCount">{{ tasks | length }}</strong> / {{ tasks | length }} công việc</span>
         <span>·</span>
-        <span>Nguồn: <strong>{{ 'Dữ liệu mẫu (Mock)' if using_mock else 'Google Sheets' }}</strong></span>
+        <span>Nguồn:
+            {% if using_mock %}
+            <strong>Dữ liệu mẫu (Mock)</strong>
+            {% else %}
+            <a href="{{ sheet_url }}" target="_blank" rel="noopener"
+               style="color:#1a4fa8;font-weight:700;text-decoration:none;">
+                Google Sheets ↗
+            </a>
+            {% endif %}
+        </span>
     </div>
 
     <!-- TASK CARDS (grouped by Task) -->
@@ -231,16 +344,21 @@
         {% set grouped = tools_data | groupby("task") %}
         {% for task_name, items in grouped %}
 
-        {% set all_text = (task_name ~ ' ' ~ items | map(attribute='tool') | join(' ') ~ ' ' ~ items | map(attribute='part_number') | join(' ')) | lower %}
+        {% set first = items | list | first %}
+        {% set all_text = (task_name ~ ' ' ~ items | map(attribute='tool') | join(' ') ~ ' ' ~ items | map(attribute='part_number') | join(' ') ~ ' ' ~ (first.engine or '') ~ ' ' ~ (first.zone or '')) | lower %}
 
         <div class="task-card"
              data-task="{{ task_name }}"
+             data-engine="{{ first.engine or '' }}"
+             data-zone="{{ first.zone or '' }}"
              data-search="{{ all_text }}">
 
             <!-- Card header -->
             <div class="card-header">
                 <div class="header-left">
                     <div class="aircraft-tag">🔧 A320/321</div>
+                    {% if first.engine %}<div class="engine-tag">⚙ {{ first.engine }}</div>{% endif %}
+                    {% if first.zone %}<div class="zone-tag-card">Zone {{ first.zone }}</div>{% endif %}
                     <div class="task-name">{{ task_name }}</div>
                 </div>
                 <div class="tool-count-badge">{{ items | list | length }} tool</div>
@@ -282,25 +400,107 @@
 
     <script>
     (function () {
-        const taskFilter   = document.getElementById('taskFilter');
-        const searchInput  = document.getElementById('searchInput');
-        const searchBtn    = document.getElementById('searchBtn');
-        const resetBtn     = document.getElementById('resetBtn');
-        const cards        = Array.from(document.querySelectorAll('.task-card'));
-        const noResults    = document.getElementById('noResults');
-        const visibleCount = document.getElementById('visibleCount');
+        const taskSearch      = document.getElementById('taskSearch');
+        const taskDropdown    = document.getElementById('taskDropdown');
+        const searchInput     = document.getElementById('searchInput');
+        const filterPanelBtn  = document.getElementById('filterPanelBtn');
+        const filterPanel     = document.getElementById('filterPanel');
+        const filterDot       = document.getElementById('filterDot');
+        const engineFilter    = document.getElementById('engineFilter');
+        const zoneFilter      = document.getElementById('zoneFilter');
+        const resetBtn        = document.getElementById('resetBtn');
+        const cards           = Array.from(document.querySelectorAll('.task-card'));
+        const noResults       = document.getElementById('noResults');
+        const visibleCount    = document.getElementById('visibleCount');
 
+        const allTasks = [...new Set(cards.map(c => c.dataset.task))].sort();
+        let selectedTask = '';
+
+        /* ── Autocomplete ────────────────────────────────────────── */
+        taskSearch.addEventListener('input', function () {
+            selectedTask = '';
+            const q = this.value.trim().toLowerCase();
+            if (!q) { hideDropdown(); applyFilter(); return; }
+            const matches = allTasks.filter(t => t.toLowerCase().includes(q));
+            if (!matches.length) { hideDropdown(); applyFilter(); return; }
+            taskDropdown.innerHTML = matches.slice(0, 25).map(t => {
+                const hl = t.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'),
+                                     '<mark>$1</mark>');
+                return `<div class="ac-item" data-value="${t.replace(/"/g,'&quot;')}">${hl}</div>`;
+            }).join('');
+            taskDropdown.style.display = 'block';
+            applyFilter();
+        });
+
+        taskDropdown.addEventListener('click', function (e) {
+            const item = e.target.closest('.ac-item');
+            if (!item) return;
+            selectedTask = item.dataset.value;
+            taskSearch.value = selectedTask;
+            hideDropdown();
+            applyFilter();
+        });
+
+        taskSearch.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') { hideDropdown(); }
+            if (e.key === 'Enter')  { hideDropdown(); applyFilter(); }
+        });
+
+        function hideDropdown() { taskDropdown.style.display = 'none'; }
+
+        /* ── Filter panel toggle ─────────────────────────────────── */
+        filterPanelBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            filterPanel.classList.toggle('open');
+        });
+
+        /* ── Close dropdowns on outside click ────────────────────── */
+        document.addEventListener('click', function (e) {
+            if (!taskSearch.contains(e.target) && !taskDropdown.contains(e.target)) hideDropdown();
+            if (!filterPanelBtn.contains(e.target) && !filterPanel.contains(e.target)) {
+                filterPanel.classList.remove('open');
+            }
+        });
+
+        /* ── Filter badge indicator ──────────────────────────────── */
+        function updateBadge() {
+            const active = engineFilter.value || zoneFilter.value;
+            filterDot.classList.toggle('visible', !!active);
+            filterPanelBtn.classList.toggle('has-filter', !!active);
+        }
+
+        engineFilter.addEventListener('change', function () { updateBadge(); applyFilter(); });
+        zoneFilter.addEventListener('change',   function () { updateBadge(); applyFilter(); });
+        searchInput.addEventListener('input',   applyFilter);
+        searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') applyFilter(); });
+
+        /* ── Main filter ─────────────────────────────────────────── */
         function applyFilter() {
-            const task    = taskFilter.value;
             const keyword = searchInput.value.trim().toLowerCase();
+            const engine  = engineFilter.value;
+            const zone    = zoneFilter.value;
+            const rawQ    = taskSearch.value.trim().toLowerCase();
             let visible   = 0;
 
             cards.forEach(card => {
                 const cardTask   = card.dataset.task   || '';
                 const cardSearch = card.dataset.search || '';
-                const matchTask  = task === 'ALL' || cardTask === task;
-                const matchKw    = !keyword || cardSearch.includes(keyword);
-                const show       = matchTask && matchKw;
+                const cardEngine = card.dataset.engine || '';
+                const cardZone   = card.dataset.zone   || '';
+
+                let matchTask;
+                if (selectedTask) {
+                    matchTask = cardTask === selectedTask;
+                } else if (rawQ) {
+                    matchTask = cardTask.toLowerCase().includes(rawQ);
+                } else {
+                    matchTask = true;
+                }
+
+                const matchKw     = !keyword || cardSearch.includes(keyword);
+                const matchEngine = !engine  || cardEngine === engine;
+                const matchZone   = !zone    || cardZone   === zone;
+                const show        = matchTask && matchKw && matchEngine && matchZone;
                 card.style.display = show ? '' : 'none';
                 if (show) visible++;
             });
@@ -309,15 +509,18 @@
             noResults.style.display  = visible === 0 ? 'block' : 'none';
         }
 
-        function resetFilter() {
-            taskFilter.value  = 'ALL';
-            searchInput.value = '';
+        /* ── Reset ───────────────────────────────────────────────── */
+        resetBtn.addEventListener('click', function () {
+            taskSearch.value   = '';
+            searchInput.value  = '';
+            engineFilter.value = '';
+            zoneFilter.value   = '';
+            selectedTask       = '';
+            hideDropdown();
+            filterPanel.classList.remove('open');
+            updateBadge();
             applyFilter();
-        }
-
-        searchBtn.addEventListener('click', applyFilter);
-        resetBtn.addEventListener('click',  resetFilter);
-        searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') applyFilter(); });
+        });
     })();
     </script>
 

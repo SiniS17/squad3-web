@@ -431,6 +431,22 @@
         <div class="panel-number">04</div>
     </div>
 
+    <!-- Panel 4: Các link thông dụng -->
+    <div class="section-panel" data-idx="4">
+        <div class="panel-content">
+            <div class="panel-tag"><span class="panel-tag-dot"></span>Các link thông dụng</div>
+            <h1 class="panel-title">CÁC LINK<br><span>THÔNG DỤNG</span></h1>
+            <p class="panel-subtitle">Đường dẫn hay dùng trong công việc</p>
+            <div class="panel-divider"></div>
+            <p class="panel-desc">
+                Tổng hợp các đường dẫn thường dùng trong công tác bảo dưỡng Airbus A320/321 —
+                hệ thống nội bộ, tài liệu kỹ thuật, biểu mẫu và báo cáo.
+            </p>
+            <a href="/links" class="panel-cta">Truy cập <span class="panel-cta-arrow">→</span></a>
+        </div>
+        <div class="panel-number">05</div>
+    </div>
+
 </main>
 
 <!-- Bottom indicator dots -->
@@ -447,11 +463,14 @@
 
 <script>
 (function () {
+    const TAB_IMAGES = {{ tab_images | tojson }};
+
     const SECTIONS = [
-        { icon: '📷', label: 'Album đội' },
-        { icon: '🔍', label: 'Hot Spots' },
-        { icon: '🔧', label: 'Tool'      },
-        { icon: '📋', label: 'Quy định'  },
+        { icon: '📷', label: 'Album đội',  key: 'memories' },
+        { icon: '🔍', label: 'Hot Spots',  key: 'hotspot'  },
+        { icon: '🔧', label: 'Tool',       key: 'tools'    },
+        { icon: '📋', label: 'Quy định',   key: 'rules'    },
+        { icon: '🔗', label: 'Các link',   key: 'links'    },
     ];
 
     const panels     = Array.from(document.querySelectorAll('.section-panel'));
@@ -483,26 +502,18 @@
         dotEls.push(d);
     });
 
-    // ── Load images from Google Drive (or static fallbacks) ──
-    fetch('/api/squad-images')
-        .then(r => r.json())
-        .then(data => {
-            images = data.images || [];
-            thumbEls.forEach((t, i) => {
-                const img = images[i];
-                if (img && img.url) {
-                    t.innerHTML = `<img src="${img.url}" alt="${SECTIONS[i].label}"
-                                        onerror="this.parentElement.innerHTML='<div class=thumb-fallback>${SECTIONS[i].icon}</div>'">`;
-                } else {
-                    t.innerHTML = `<div class="thumb-fallback">${SECTIONS[i].icon}</div>`;
-                }
-            });
-        })
-        .catch(() => {
-            thumbEls.forEach((t, i) => {
-                t.innerHTML = `<div class="thumb-fallback">${SECTIONS[i].icon}</div>`;
-            });
-        });
+    // ── Load tab images from config (static files in /static/images/) ──
+    thumbEls.forEach((t, i) => {
+        const s        = SECTIONS[i];
+        const filename = TAB_IMAGES[s.key];
+        if (filename) {
+            const url = '/static/images/' + filename;
+            t.innerHTML = `<img src="${url}" alt="${s.label}"
+                                onerror="this.parentElement.innerHTML='<div class=\\'thumb-fallback\\'>${s.icon}</div>'">`;
+        } else {
+            t.innerHTML = `<div class="thumb-fallback">${s.icon}</div>`;
+        }
+    });
 
     // ── Switch section ──
     function goTo(idx) {

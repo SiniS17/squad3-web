@@ -305,6 +305,7 @@
                 <a href="/hotspot" class="current"><span class="nav-icon">✈</span> Hot Spots</a>
                 <a href="/tools"><span class="nav-icon">🔧</span> Danh mục Tool</a>
                 <a href="/rules"><span class="nav-icon">📋</span> Quy định</a>
+                <a href="/links"><span class="nav-icon">🔗</span> Các link</a>
             </div>
         </nav>
         <div class="page-title">HOT SPOT – CÁC ĐIỂM CHÚ Ý KIỂM TRA SỚM TÀU A320/321</div>
@@ -321,11 +322,6 @@
             Đang hiển thị <strong>dữ liệu mẫu</strong>. Kết nối Google Sheets sẽ được cấu hình ở Phase 2.
             {% if google_error %}({{ google_error }}){% endif %}
         </span>
-    </div>
-    {% else %}
-    <div class="data-notice live">
-        <span class="notice-icon">✅</span>
-        <span>Dữ liệu từ <strong>Google Sheets</strong> – {{ hotspot_data | length }} mục</span>
     </div>
     {% endif %}
 
